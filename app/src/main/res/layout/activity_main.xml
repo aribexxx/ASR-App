@@ -10,49 +10,46 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toBottomOf="parent"
-        tools:context=".activities.MainActivity">
+        tools:context=".activities.MainActivity"
+        >
 
-
-        <LinearLayout
-
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                tools:context=".activities.MainActivity">
-
-
-                    <LinearLayout
-
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        tools:context=".activities.MainActivity">
-
-                        <Spinner
+        <Spinner
                             android:id="@+id/animalNamesSpinner"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true" />
+        <EditText
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:layout_below="@id/animalNamesSpinner"
+            android:layout_centerHorizontal="true"
+            android:text="Input String" />
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView1"
+            android:layout_centerHorizontal="true"
+            android:text="Button" />
 
-                    </LinearLayout>
+        <Button
+            android:id="@+id/activitySecond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/button"
+            android:layout_centerHorizontal="true"
+            android:text="Button" />
+        <Button
+            android:id="@+id/activityRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/activitySecond"
+            android:layout_centerHorizontal="true"
+            android:text="Button" />
 
-                    <Button
-                        android:id="@+id/button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Click Me" />
-
-                    <EditText
-                        android:id="@+id/text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Text"
-                        android:textColor="#000000"
-                        android:textSize="20dp"
-
-                        android:textStyle="bold" />
-
-            </LinearLayout>
 
 
 

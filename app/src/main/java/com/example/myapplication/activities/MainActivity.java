@@ -41,9 +41,10 @@ public class MainActivity  extends AppCompatActivity implements
 
 
 
-        //click button
+        //click button 1
         clickme = (Button)findViewById(R.id.button);
-        text = (EditText)findViewById(R.id.text);
+        text = (EditText)findViewById(R.id.textView1);
+
         clickme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,6 +55,8 @@ public class MainActivity  extends AppCompatActivity implements
                 startActivity(intent);
             }
         });
+
+
 
     }
 
