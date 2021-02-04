@@ -20,10 +20,13 @@ public class MainActivity  extends AppCompatActivity implements
     String animalList[] = {"Lion","Tiger","Monkey","Elephant","Dog","Cat","Camel"};
 
 
-    //button
+    //button 1
     EditText text;
     Button clickme ;
     String Texthere;
+
+    //button 3
+    Button go_recycler ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +53,30 @@ public class MainActivity  extends AppCompatActivity implements
             public void onClick(View v) {
                 Texthere = text.getText().toString();
                 Intent intent = new Intent(MainActivity.this,
-                        SecondActivity.class);
+                        FirstActivity.class);
                 intent.putExtra("Text",Texthere);
+                startActivity(intent);
+            }
+        });
+        //click button 2
+
+        go_recycler=(Button)findViewById(R.id.activityRecord);
+        go_recycler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,
+                        RecyclerViewActivity.class);
                 startActivity(intent);
             }
         });
 
 
+        //click button 3
+
 
     }
+
+
 
 
     //Performing action onItemSelected and onNothing selected

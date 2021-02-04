@@ -1,6 +1,9 @@
 package com.example.myapplication.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,18 +23,27 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
     List<Record> recordlist;
 
-
+    Button go_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recycler_view);
 
+        //recycler view
         myrecyclerView = findViewById(R.id.myrecycleview);
-
         initData();
         initRecyclerView();
 
+        //button go back main
+        go_back=(Button)findViewById(R.id.back_main);
+         go_back.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 Intent back_intent=new Intent(RecyclerViewActivity.this,MainActivity.class);
+                 startActivity(back_intent);
+             }
+         });
     }
     private void initRecyclerView() {
         RecordAdaptor recordAdaptor = new RecordAdaptor(recordlist);
