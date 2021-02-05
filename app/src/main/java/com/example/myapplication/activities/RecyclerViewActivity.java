@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.util.RecordAdaptor;
 import com.example.myapplication.R;
-import com.example.myapplication.util.Record;
+import com.example.myapplication.models.Record;
 
 import java.util.ArrayList;
 import java.util.List;
