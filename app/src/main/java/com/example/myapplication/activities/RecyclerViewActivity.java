@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.util.RecordAdaptor;
+import com.example.myapplication.adapter.RecordAdaptor;
 import com.example.myapplication.R;
 import com.example.myapplication.models.Record;
 

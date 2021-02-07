@@ -7,53 +7,7 @@
     android:padding="30dp"
     tools:context=".activities.ImageLoadActivity">
 
-    <Button
-        android:id="@+id/displayData"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+    <!--ListView for displaying images-->
 
-        android:text="Display Hero Data"
-        android:textColor="#fff"
-        android:textSize="20sp" />
-
-    <Spinner
-        android:id="@+id/selectHero"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="Hero Name: "
-        android:visibility="gone"
-        android:textColor="#000"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/categoryTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="His Ability: "
-        android:visibility="gone"
-        android:textColor="#000"
-        android:textSize="18sp" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        android:fitsSystemWindows="true"
-        android:layout_marginTop="20dp"
-        android:scaleType="centerCrop" />
 
 </LinearLayout>
