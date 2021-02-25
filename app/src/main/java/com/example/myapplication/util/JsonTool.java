@@ -1,4 +1,4 @@
 package com.example.myapplication.util;
 
-public class GetJsonUtil {
+public class JsonTool {
 }
