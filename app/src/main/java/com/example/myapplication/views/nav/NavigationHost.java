@@ -1,4 +1,4 @@
-package com.google.codelabs.mdc.java.shrine;
+package com.example.myapplication.login;
 
 import androidx.fragment.app.Fragment;
 

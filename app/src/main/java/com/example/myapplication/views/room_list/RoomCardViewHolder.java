@@ -1,4 +1,4 @@
-package com.example.myapplication.views;
+package com.example.myapplication.views.room_view;
 
 import android.view.View;
 import android.widget.TextView;
@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.example.myapplication.R;
 
-public class ProductCardViewHolder extends RecyclerView.ViewHolder {
+public class RoomCardViewHolder extends RecyclerView.ViewHolder {
     public NetworkImageView productImage;
     public TextView productTitle;
     public TextView productPrice;
 
-    public ProductCardViewHolder(@NonNull View itemView) {
+    public RoomCardViewHolder(@NonNull View itemView) {
         super(itemView);
         //TODO: Find and store views from itemView
         productImage = itemView.findViewById(R.id.product_image);
