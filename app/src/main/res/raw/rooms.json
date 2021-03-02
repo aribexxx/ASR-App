@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Room 1",
+    "url": "https://storage.googleapis.com/material-vignettes.appspot.com/image/0-0.jpg",
+    "speaker_name": "Eva"
+  },
+  {
+    "title": "Room 2",
+    "url": "https://storage.googleapis.com/material-vignettes.appspot.com/image/1-0.jpg",
+    "speaker_name": "Jason"
+  },
+  {
+    "title": "Room 3",
+    "url": "https://storage.googleapis.com/material-vignettes.appspot.com/image/0-0.jpg",
+    "speaker_name": "Eva"
+  },
+  {
+    "title": "Room 4",
+    "url": "https://storage.googleapis.com/material-vignettes.appspot.com/image/1-0.jpg",
+    "speaker_name": "Jason"
+  }
+  ]
