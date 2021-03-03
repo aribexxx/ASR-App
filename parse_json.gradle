@@ -1,0 +1,11 @@
+import groovy.json.JsonSlurper
+
+ext {
+    configPath
+}
+
+def jsonFile = file(project.ext.configPath)
+def parsedJson = new JsonSlurper().parseText(jsonFile.text)
+ext.getValueById = { key ->
+    return parsedJson[key]
+}
