@@ -1,5 +1,7 @@
 package com.example.myapplication.views.room_list;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -86,7 +88,7 @@ RoomCardRecyclerViewAdapter adapter;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.VERTICAL, false));
        // recyclerView.setLayoutManager(new );
-        roomlist=initRoomEntryList_OnServer();
+        roomlist=RoomEntry.initRoomEntryList(getResources(),getResources().openRawResource(R.raw.rooms));
          adapter = new RoomCardRecyclerViewAdapter(this.getContext(),
                 roomlist);
        // Log.println(Log.DEBUG,"SHOW",RoomEntry.initRoomEntryList(getResources()).toArray().toString());
@@ -144,17 +146,29 @@ RoomCardRecyclerViewAdapter adapter;
 
                 // This method performs the actual data-refresh operation.
                 // The method calls setRefreshing(false) when it's finished.
-                roomlist=initRoomEntryList_OnServer();
-                swapItems(roomlist);
+
+
+
+
+               //swap items
+                new Handler(getActivity().getMainLooper()).post(new Runnable() {
+                    public void run() {
+
+                       //Modify here to
+                       // adapter.setRoomList(initRoomEntryList_OnServer());
+                        adapter.setRoomList(RoomEntry.initRoomEntryList(getResources(),getResources().openRawResource(R.raw.new_rooms)));
+                        adapter.notifyDataSetChanged();
+                        Log.i("RF", "finish");
+                        my_swipe_refresh.setRefreshing(false);
+                    }
+                });
+
             }
         });
 
     }
 
-    public void swapItems(List<RoomEntry> roomlist){
-        this.roomlist=roomlist;
-        adapter.notifyDataSetChanged();
-    }
+
 
     /**
      * Loads server responds and converts it into a list of RoomEntry objects

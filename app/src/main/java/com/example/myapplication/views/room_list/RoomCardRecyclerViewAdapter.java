@@ -68,8 +68,12 @@ public class RoomCardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-
-
+    public List<RoomEntry> getRoomList(){
+        return roomList;
+    }
+    public void setRoomList(List<RoomEntry> rooms){
+         roomList=rooms;
+    }
     @Override
     public int getItemCount() {
         return roomList.size();
