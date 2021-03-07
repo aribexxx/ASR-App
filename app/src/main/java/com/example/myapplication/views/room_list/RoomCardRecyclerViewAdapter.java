@@ -1,51 +1,77 @@
-package com.example.myapplication.views.room_view;
+package com.example.myapplication.views.room_list;
 
+import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.myapplication.util.network.ImageRequester;
-import com.example.myapplication.models.RoomEntry;
+
 import com.example.myapplication.R;
+import com.example.myapplication.models.RoomEntry;
 
 import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Adapter used to show a simple grid of products.
+ * Adapter used to show a list of rooms
  */
-public class RoomCardRecyclerViewAdapter extends RecyclerView.Adapter<RoomCardViewHolder> {
+public class RoomCardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static int TYPE_PUBLIC = 1;
+    private static int TYPE_PRIVATE = 2;
+    private Context context;
+    private  List<RoomEntry> roomList;
 
-    private List<RoomEntry> productList;
-    private ImageRequester imageRequester;
 
-    RoomCardRecyclerViewAdapter(List<RoomEntry> productList) {
-        this.productList = productList;
-        imageRequester = ImageRequester.getInstance();
+    RoomCardRecyclerViewAdapter(Context context,List<RoomEntry> roomList) {
+        this.context = context;
+        this.roomList = roomList;
+
+    }
+
+    @Override
+    public int getItemViewType(int position){
+       if(TextUtils.isEmpty(roomList.get(position).getPassword())){
+           return TYPE_PUBLIC;
+       }
+       else{
+           return TYPE_PRIVATE;
+       }
     }
 
     @NonNull
     @Override
-    public RoomCardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.room_card, parent, false);
-        return new RoomCardViewHolder(layoutView);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = null;
+        if (viewType == TYPE_PUBLIC) { // for call layout
+            view = LayoutInflater
+                    .from(parent.getContext())
+                    .inflate(R.layout.public_room_card, parent, false);
+            return new PublicRoomCardViewHolder(view);}
+            else {
+                view = LayoutInflater
+                        .from(parent.getContext())
+                        .inflate(R.layout.private_room_card, parent, false);
+                return new PrivateRoomCardViewHolder(view);
+            }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RoomCardViewHolder holder, int position) {
-        // TODO: Put ViewHolder binding code here in MDC-102
-        if (productList != null && position < productList.size()) {
-            RoomEntry product = productList.get(position);
-            holder.productTitle.setText(product.title);
-            holder.productPrice.setText(product.speaker_name);
-            imageRequester.setImageFromUrl(holder.productImage, product.url);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+        if (roomList != null && position < roomList.size()) {
+            if (getItemViewType(position) == TYPE_PUBLIC) {
+                ((PublicRoomCardViewHolder) viewHolder).bindType(roomList.get(position));
+            } else {
+                ((PrivateRoomCardViewHolder) viewHolder).bindType(roomList.get(position));
+            }
         }
-
     }
+
+
 
     @Override
     public int getItemCount() {
-        return productList.size();
+        return roomList.size();
     }
 }

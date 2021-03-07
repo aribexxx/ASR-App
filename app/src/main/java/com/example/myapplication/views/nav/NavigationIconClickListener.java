@@ -1,4 +1,4 @@
-package com.example.myapplication.login;
+package com.example.myapplication.views.nav;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;

@@ -1,22 +1,33 @@
 [
   {
-    "title": "Room 1",
+
     "url": "https://storage.googleapis.com/material-vignettes.appspot.com/image/0-0.jpg",
-    "speaker_name": "Eva"
-  },
+    "state": "success",
+  "room_title": "Topic: English speaking room",
+  "speaker_name":"Eva",
+  "room_id":"000000000",
+  "password":10000},
+
   {
-    "title": "Room 2",
-    "url": "https://storage.googleapis.com/material-vignettes.appspot.com/image/1-0.jpg",
-    "speaker_name": "Jason"
-  },
+
+    "state": "success",
+    "speaker_name":"Tom",
+    "room_id":"000000001"
+    },
   {
-    "title": "Room 3",
     "url": "https://storage.googleapis.com/material-vignettes.appspot.com/image/0-0.jpg",
-    "speaker_name": "Eva"
-  },
+    "state": "success",
+    "room_title": "Topic: English speaking room",
+    "speaker_name":"Eva",
+    "room_id":"000000000",
+    "password":10000},
+
+
   {
-    "title": "Room 4",
-    "url": "https://storage.googleapis.com/material-vignettes.appspot.com/image/1-0.jpg",
-    "speaker_name": "Jason"
+
+    "state": "success",
+
+    "speaker_name":"Tom",
+    "room_id":"000000001"
   }
   ]

@@ -8,14 +8,14 @@ import androidx.annotation.Nullable;
 import com.example.myapplication.asr.realtime.ASRRoomActivity;
 import com.example.myapplication.models.RoomEntry;
 
-public class PublicRoomActivity extends ASRRoomActivity {
+public class SpeakerPublicRoomActivity extends ASRRoomActivity {
 
 
 
     RoomEntry room;
     EditText recognizeResult;
 
-    public PublicRoomActivity(){
+    public SpeakerPublicRoomActivity(){
        this.room=new RoomEntry();
    }
 

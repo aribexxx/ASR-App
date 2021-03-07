@@ -1,4 +1,4 @@
-package com.example.myapplication.login;
+package com.example.myapplication.views.nav;
 
 import androidx.fragment.app.Fragment;
 

@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/search"
-        android:icon="@drawable/shr_search"
+        android:icon="@drawable/search"
         android:title="@string/shr_search_title"
         app:showAsAction="always" />
     <item
         android:id="@+id/filter"
-        android:icon="@drawable/shr_filter"
+        android:icon="@drawable/filter"
         android:title="@string/shr_filter_title"
         app:showAsAction="always" />
 </menu>

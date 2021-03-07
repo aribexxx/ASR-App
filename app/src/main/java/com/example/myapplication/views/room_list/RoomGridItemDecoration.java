@@ -1,4 +1,4 @@
-package com.example.myapplication.views.room_view;
+package com.example.myapplication.views.room_list;
 
 import android.graphics.Rect;
 import android.view.View;

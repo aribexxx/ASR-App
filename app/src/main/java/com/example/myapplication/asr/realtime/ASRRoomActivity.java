@@ -1,7 +1,6 @@
 package com.example.myapplication.asr.realtime;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,15 +15,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.myapplication.views.setup_room.PublicRoomFragment;
 import com.google.android.material.button.MaterialButton;
 import com.tencent.aai.AAIClient;
 import com.tencent.aai.audio.data.AudioRecordDataSource;
@@ -63,23 +58,23 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class ASRTest extends AppCompatActivity implements MessageListener {
-    Toolbar toolbar;
-    MaterialButton leave_room;
-    Button start;
-    Button stop;
-    Button cancel;
+public class ASRRoomActivity extends AppCompatActivity implements MessageListener {
+    protected Toolbar toolbar;
+    protected MaterialButton leave_room;
+    protected Button start;
+    protected Button stop;
+    protected Button cancel;
 
-    TextView recognizeState;
-    TextView volume;
+    protected TextView recognizeState;
+    protected TextView volume;
 
-    EditText recognizeResult;
+    protected EditText recognizeResult;
 
-    int currentRequestId = 0;
+    protected int currentRequestId = 0;
 
-    Handler handler;
+    protected Handler handler;
 
-    private static final Logger logger = LoggerFactory.getLogger(ASRTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(ASRRoomActivity.class);
 
     final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
 
@@ -129,34 +124,11 @@ public class ASRTest extends AppCompatActivity implements MessageListener {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mh_publicroom_fragment);
-        Intent intent = getIntent();
-        Bundle bundle = intent.getBundleExtra(CommonConst.config);
-
-        // 初始化相应的控件
-        //set UI components view
-        leave_room= findViewById(R.id.leaveroom_button);
-        //set leave room button click
-        leave_room.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-
-            }
-        });
-
-
-        start = (Button) findViewById(R.id.start);
-        stop = (Button) findViewById(R.id.stop);
-        cancel = (Button)findViewById(R.id.cancel);
-        recognizeState = (TextView) findViewById(R.id.recognize_state);
-        volume = (TextView) findViewById(R.id.volume);
-        recognizeResult = (EditText) findViewById(R.id.recognize_result);
-        handler = new Handler(getMainLooper());
+        initView();
 
 
 
-        switchToDeviceAuth = SharePreferenceUtil.getBoolean(ASRTest.this,
+        switchToDeviceAuth = SharePreferenceUtil.getBoolean(ASRRoomActivity.this,
                 Const.APP_CONFIG_FILE, Const.SWITCH_TO_DEVICE_AUTH);
 
         // 检查sdk运行的必要条件权限
@@ -429,7 +401,7 @@ public class ASRTest extends AppCompatActivity implements MessageListener {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ASRTest.this.volume.setText(getString(R.string.volume)+volume);
+                        ASRRoomActivity.this.volume.setText(getString(R.string.volume)+volume);
                     }
                 });
             }
@@ -476,12 +448,12 @@ public class ASRTest extends AppCompatActivity implements MessageListener {
 //                        aaiClient = new AAIClient(MainActivity.this, appid, projectId, secretId, credentialProvider);
                 //sdk crash 上传
                 if (switchToDeviceAuth) {
-                    aaiClient = new AAIClient(ASRTest.this, Integer.valueOf(DemoConfig.appIdForDeviceAuth), projectId,
+                    aaiClient = new AAIClient(ASRRoomActivity.this, Integer.valueOf(DemoConfig.appIdForDeviceAuth), projectId,
                             DemoConfig.secretIdForDeviceAuth, DemoConfig.secretKeyForDeviceAuth,
                             DemoConfig.serialNumForDeviceAuth, DemoConfig.deviceNumForDeviceAuth,
-                            credentialProvider, ASRTest.this);
+                            credentialProvider, ASRRoomActivity.this);
                 } else {
-                    aaiClient = new AAIClient(ASRTest.this, appid, projectId, secretId,secretKey ,credentialProvider);
+                    aaiClient = new AAIClient(ASRRoomActivity.this, appid, projectId, secretId,secretKey ,credentialProvider);
                 }
             } catch (ClientException e) {
                 e.printStackTrace();
@@ -616,7 +588,7 @@ public class ASRTest extends AppCompatActivity implements MessageListener {
         ((TextView)view.findViewById(R.id.config_secret_id)).setText(getString(R.string.secret_id)+secretId);
         ((TextView)view.findViewById(R.id.config_secret_key)).setText(getString(R.string.secret_key)+secretKey);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(ASRTest.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ASRRoomActivity.this);
         builder.setTitle(getString(R.string.confirm_config));
         builder.setView(view);
         builder.setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener(){
@@ -630,6 +602,38 @@ public class ASRTest extends AppCompatActivity implements MessageListener {
 //        dialog.show();
 
     }
+
+
+    public void initView(){
+        setContentView(R.layout.mh_publicroom_activity);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getBundleExtra(CommonConst.config);
+
+        // 初始化相应的控件
+        //set UI components view
+        leave_room= findViewById(R.id.leaveroom_button);
+        //set leave room button click
+        leave_room.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+
+            }
+        });
+
+        start = (Button) findViewById(R.id.start);
+        stop = (Button) findViewById(R.id.stop);
+        cancel = (Button)findViewById(R.id.cancel);
+        recognizeState = (TextView) findViewById(R.id.recognize_state);
+        volume = (TextView) findViewById(R.id.volume);
+        recognizeResult = (EditText) findViewById(R.id.recognize_result);
+        handler = new Handler(getMainLooper());
+    }
+
+
+
+
+
 
     @Override
     protected void onDestroy() {
@@ -645,13 +649,13 @@ public class ASRTest extends AppCompatActivity implements MessageListener {
     public void onMessage(final String msg) {
         runOnUiThread(new Runnable() {
             public void run() {
-                Toast.makeText(ASRTest.this, msg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ASRRoomActivity.this, msg, Toast.LENGTH_SHORT).show();
             }
         });
     }
     private void setUp_ReturnToolbar( ) {
         toolbar= findViewById(R.id.return_bar);
-        AppCompatActivity activity = (AppCompatActivity) ASRTest.this;
+        AppCompatActivity activity = (AppCompatActivity) ASRRoomActivity.this;
         if (activity != null) {
             activity.setSupportActionBar(toolbar);
         }

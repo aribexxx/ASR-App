@@ -1,4 +1,4 @@
-package com.example.myapplication.views;
+package com.example.myapplication.views.demo_trail;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,9 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.adapter.RecordAdaptor;
+import com.example.myapplication.views.adapter.RecordAdaptor;
 import com.example.myapplication.R;
 import com.example.myapplication.models.Record;
+import com.example.myapplication.views.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
          go_back.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
-                 Intent back_intent=new Intent(RecyclerViewActivity.this,MainActivity.class);
+                 Intent back_intent=new Intent(RecyclerViewActivity.this, MainActivity.class);
                  startActivity(back_intent);
              }
          });

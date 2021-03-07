@@ -12,14 +12,14 @@ import androidx.annotation.Nullable;
 
 import com.example.myapplication.R;
 import com.example.myapplication.asr.realtime.ASRRoomActivity;
-import com.example.myapplication.models.PrivateRoomEntry;
+import com.example.myapplication.models.RoomEntry;
 import com.tencent.iot.speech.app.CommonConst;
 
-public class SpeakerPrivateRoomActivity extends ASRRoomActivity {
-    PrivateRoomEntry room;
+public class ListenerPrivateRoomActivity extends ASRRoomActivity {
+    RoomEntry room;
 
 
-    public SpeakerPrivateRoomActivity(){
+    public ListenerPrivateRoomActivity(){
 
     }
     @Override
@@ -56,9 +56,9 @@ public class SpeakerPrivateRoomActivity extends ASRRoomActivity {
     }
 
     public void initRoomEtry(){
-        this.room=new PrivateRoomEntry();
+        this.room=new RoomEntry();
     }
-    public PrivateRoomEntry getRoomEtry(){
+    public RoomEntry getRoomEtry(){
            return  room;
     }
     public void setPasswordPrivateRoom(String password){

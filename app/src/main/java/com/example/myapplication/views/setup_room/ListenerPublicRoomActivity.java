@@ -8,14 +8,14 @@ import androidx.annotation.Nullable;
 import com.example.myapplication.asr.realtime.ASRRoomActivity;
 import com.example.myapplication.models.RoomEntry;
 
-public class SpeakerPublicRoomActivity extends ASRRoomActivity {
+public class ListenerPublicRoomActivity extends ASRRoomActivity {
 
 
 
     RoomEntry room;
     EditText recognizeResult;
 
-    public SpeakerPublicRoomActivity(){
+    public ListenerPublicRoomActivity(){
        this.room=new RoomEntry();
    }
 
@@ -24,7 +24,6 @@ public class SpeakerPublicRoomActivity extends ASRRoomActivity {
         super.onCreate(savedInstanceState);
 
     }
-
 
 
 }

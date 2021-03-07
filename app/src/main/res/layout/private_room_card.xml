@@ -7,7 +7,7 @@
     app:cardElevation="0dp"
     app:cardPreventCornerOverlap="true">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -19,10 +19,12 @@
             android:background="?attr/colorPrimaryDark"
             android:scaleType="centerCrop" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:id="@+id/text_wrapper"
+            android:layout_below="@id/room_theme_image"
             android:padding="16dp">
 
             <TextView
@@ -41,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/shr_product_title"
                 android:textAlignment="center"
+                android:layout_below="@+id/room_title"
                 android:textAppearance="?attr/textAppearanceSubtitle2"
                 android:gravity="center_horizontal" />
 
@@ -50,8 +53,16 @@
                 android:layout_height="wrap_content"
                 android:text="@string/speaker_name"
                 android:textAlignment="center"
+                android:layout_below="@+id/room_id"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:gravity="center_horizontal" />
-        </LinearLayout>
-    </LinearLayout>
+
+        </RelativeLayout>
+        <ImageView
+            android:id="@+id/private_lock_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:srcCompat="@android:drawable/ic_lock_idle_lock" />
+
+    </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>
