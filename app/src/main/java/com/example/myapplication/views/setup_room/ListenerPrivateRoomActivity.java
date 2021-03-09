@@ -18,7 +18,6 @@ import com.tencent.iot.speech.app.CommonConst;
 public class ListenerPrivateRoomActivity extends ASRRoomActivity {
     RoomEntry room;
 
-
     public ListenerPrivateRoomActivity(){
 
     }
@@ -30,14 +29,12 @@ public class ListenerPrivateRoomActivity extends ASRRoomActivity {
     @Override
     public void initView(){
         setContentView(R.layout.mh_privateroom_activity);
-        Intent intent = getIntent();
-        Bundle bundle = intent.getBundleExtra(CommonConst.config);
 
         // 初始化相应的控件
         //set UI components view
-        leave_room= findViewById(R.id.leaveroom_button);
+        leaveRoom = findViewById(R.id.leaveroom_button);
         //set leave room button click
-        leave_room.setOnClickListener(new View.OnClickListener() {
+        leaveRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -56,11 +53,13 @@ public class ListenerPrivateRoomActivity extends ASRRoomActivity {
     }
 
     public void initRoomEtry(){
-        this.room=new RoomEntry();
+        this.room=new RoomEntry.Builder().build();
     }
+
     public RoomEntry getRoomEtry(){
            return  room;
     }
+
     public void setPasswordPrivateRoom(String password){
         this.room.setPassword(password);
     }

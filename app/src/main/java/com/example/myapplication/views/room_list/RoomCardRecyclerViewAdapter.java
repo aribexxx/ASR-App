@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class RoomCardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static int TYPE_PUBLIC = 1;
     private static int TYPE_PRIVATE = 2;
-    private Context context;
+    private final Context context;
     private  List<RoomEntry> roomList;
 
 

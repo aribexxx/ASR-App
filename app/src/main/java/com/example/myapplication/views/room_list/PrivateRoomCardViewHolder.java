@@ -42,8 +42,8 @@ public class PrivateRoomCardViewHolder extends RecyclerView.ViewHolder {
 
 
     public void bindType(RoomCardType item) {
-        roomTitle.setText(((RoomEntry)item).getRoom_title());
-        speaker_name.setText(((RoomEntry)item).getSpeaker_name());
+        roomTitle.setText(((RoomEntry)item).getRoomTitle());
+        speaker_name.setText(((RoomEntry)item).getSpeakerName());
         imageRequester.setImageFromUrl(roomImage,((RoomEntry)item).getUrl());
     }
 }

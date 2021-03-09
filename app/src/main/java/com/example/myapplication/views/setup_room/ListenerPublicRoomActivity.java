@@ -9,14 +9,11 @@ import com.example.myapplication.asr.realtime.ASRRoomActivity;
 import com.example.myapplication.models.RoomEntry;
 
 public class ListenerPublicRoomActivity extends ASRRoomActivity {
-
-
-
     RoomEntry room;
     EditText recognizeResult;
 
     public ListenerPublicRoomActivity(){
-       this.room=new RoomEntry();
+        this.room=new RoomEntry.Builder().build();
    }
 
     @Override

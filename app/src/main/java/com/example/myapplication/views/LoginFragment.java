@@ -86,8 +86,8 @@ public class LoginFragment extends Fragment  {
                          String username=usernameEditText.getText().toString();
                          String password=passwordEditText.getText().toString();
 
-                         FormBody formBody=new FormBody.Builder().add("username",username).add("password",password).build();
-                         Request request=new Request.Builder().post(formBody).url(DemoConfig.SERVER_PATH +DemoConfig.route_login).build();
+                         FormBody formBody=new FormBody.Builder().add("userName",username).add("userPwd",password).build();
+                         Request request=new Request.Builder().post(formBody).url(DemoConfig.SERVER_PATH +DemoConfig.ROUTE_LOGIN).build();
                          Call call= okHttpClient.newCall(request);
 
                         // this makes asynchronous call to server
@@ -104,6 +104,7 @@ public class LoginFragment extends Fragment  {
                                  login_prog.dismiss();
                                  //handling json response, getting fields
                                  final String myresponse_json=response.body().string();
+                                 Log.println(Log.DEBUG,"OUT_JSON",myresponse_json);
                                  Gson gson=new Gson();
                                  Properties extract_data=gson.fromJson(myresponse_json,Properties.class);
                                  String state=extract_data.getProperty("state");

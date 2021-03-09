@@ -1,7 +1,6 @@
 package com.example.myapplication.views.room_list;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,20 +21,16 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.myapplication.R;
 import com.example.myapplication.models.RoomEntry;
-import com.example.myapplication.views.nav.NavigationHost;
 import com.example.myapplication.views.setup_room.StartRoomFragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.tencent.iot.speech.app.DemoConfig;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -184,7 +179,7 @@ RoomCardRecyclerViewAdapter adapter;
                     .build();
 
             // FormBody formBody=new FormBody.Builder().build();
-            Request request=new Request.Builder().get().url(DemoConfig.SERVER_PATH +DemoConfig.route_showroom).build();
+            Request request=new Request.Builder().get().url(DemoConfig.SERVER_PATH +DemoConfig.ROUTE_SHOWROOM).build();
             Call call= okHttpClient.newCall(request);
 
             // this makes asynchronous call to server

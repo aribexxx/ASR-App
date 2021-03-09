@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -59,8 +58,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ASRRoomActivity extends AppCompatActivity implements MessageListener {
-    protected Toolbar toolbar;
-    protected MaterialButton leave_room;
+    protected Toolbar toolBar;
+    protected MaterialButton leaveRoom;
     protected Button start;
     protected Button stop;
     protected Button cancel;
@@ -249,7 +248,7 @@ public class ASRRoomActivity extends AppCompatActivity implements MessageListene
                     @Override
                     public void run() {
 
-                        if (clientException!=null) {
+                        if (clientException != null) {
                             recognizeState.setText("识别状态：失败,  "+clientException.toString());
                             AAILogger.info(logger, "识别状态：失败,  "+clientException.toString());
                         } else if (serverException!=null) {
@@ -611,9 +610,9 @@ public class ASRRoomActivity extends AppCompatActivity implements MessageListene
 
         // 初始化相应的控件
         //set UI components view
-        leave_room= findViewById(R.id.leaveroom_button);
+        leaveRoom = findViewById(R.id.leaveroom_button);
         //set leave room button click
-        leave_room.setOnClickListener(new View.OnClickListener() {
+        leaveRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -654,12 +653,12 @@ public class ASRRoomActivity extends AppCompatActivity implements MessageListene
         });
     }
     private void setUp_ReturnToolbar( ) {
-        toolbar= findViewById(R.id.return_bar);
+        toolBar = findViewById(R.id.return_bar);
         AppCompatActivity activity = (AppCompatActivity) ASRRoomActivity.this;
         if (activity != null) {
-            activity.setSupportActionBar(toolbar);
+            activity.setSupportActionBar(toolBar);
         }
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

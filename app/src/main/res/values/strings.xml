@@ -39,4 +39,5 @@
     <string name="confirm_config">请确认信息</string>
     <string name="confirm">确认</string>
     <string name="extended_fab_label">Start a room</string>
+    <string name="public_room_identifer">Welcome everyone</string>
 </resources>
