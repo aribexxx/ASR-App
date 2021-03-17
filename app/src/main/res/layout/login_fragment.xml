@@ -90,5 +90,15 @@
                 android:text="@string/shr_button_cancel" />
 
         </RelativeLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/sign_up_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            style="@style/Widget.MockHouse.Button"
+            android:text="@string/sign_up_text" />
+
     </LinearLayout>
 </ScrollView>

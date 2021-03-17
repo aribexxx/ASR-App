@@ -1,7 +1,6 @@
 package com.example.myapplication.models;
 
 import android.content.res.Resources;
-import android.net.Uri;
 import android.util.Log;
 import com.example.myapplication.views.room_list.RoomCardType;
 import com.google.gson.Gson;
@@ -26,9 +25,11 @@ public class RoomEntry implements RoomCardType {
      * 必需属性
      */
     private String roomTitle;
-    private String speakerName;
+    private String userName; // get speaker name from server
+    private String roomDescription;
     private String roomID;
-    private String password;// private roon require, public can set to null
+    private String direct; //language setting (int (0: zh->en, 1: en->zh, ……) (*required)
+    private String pwd;// private roon require, public can set to null
     /**
      * 可选属性
      */
@@ -37,27 +38,37 @@ public class RoomEntry implements RoomCardType {
 
     public RoomEntry(Builder builder) {
      this.roomTitle=builder.roomTitle;
-     this.speakerName=builder.speakerName;
+     this.userName =builder.speakerName;
      this.roomID=builder.roomID;
-     this.password=builder.password;
+     this.pwd =builder.password;
+     this.roomDescription=builder.roomDescription;
+     this.direct=builder.direct;
 
     }
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
     }
-    public String getPassword() {
-        return password;
+    public String getPwd() {
+        return pwd;
     }
     public String getRoomTitle() {
         return roomTitle;
     }
 
     public String getSpeakerName() {
-        return speakerName;
+        return userName;
     }
 
     public String getRoomID() {
         return roomID;
+    }
+
+    public String getRoomDescription() {
+        return roomDescription;
+    }
+
+    public String getDirect() {
+        return direct;
     }
 
     public String getUrl() {
@@ -95,7 +106,7 @@ public class RoomEntry implements RoomCardType {
 
     @Override
     public int getListItemType() {
-        if(this.password==null){
+        if(this.pwd ==null){
             return Public_Room_Card;
         }
         else {
@@ -109,6 +120,8 @@ public class RoomEntry implements RoomCardType {
         private String roomTitle;
         private String speakerName;
         private String roomID;
+        private String roomDescription;
+        private String direct;
         private String password;// private roon require, public can set to null
         private String url;
 
@@ -130,6 +143,14 @@ public class RoomEntry implements RoomCardType {
 
         public Builder speakerName(String speakerName) {
             this.speakerName = speakerName;
+            return this;
+        }
+        public Builder roomDescription(String roomDescription) {
+            this.roomDescription = roomDescription;
+            return this;
+        }
+        public Builder direct(String direct) {
+            this.direct = direct;
             return this;
         }
         public Builder roomID(String roomID) {

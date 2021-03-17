@@ -1,4 +1,4 @@
-package com.example.myapplication.asr.realtime;
+package com.example.myapplication.asr.parentclass;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -57,7 +57,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class ASRRoomActivity extends AppCompatActivity implements MessageListener {
+public class SpeakerASRRoomActivity extends AppCompatActivity implements MessageListener {
     protected Toolbar toolBar;
     protected MaterialButton leaveRoom;
     protected Button start;
@@ -69,11 +69,12 @@ public class ASRRoomActivity extends AppCompatActivity implements MessageListene
 
     protected EditText recognizeResult;
 
+
     protected int currentRequestId = 0;
 
     protected Handler handler;
 
-    private static final Logger logger = LoggerFactory.getLogger(ASRRoomActivity.class);
+    private static final Logger logger = LoggerFactory.getLogger(SpeakerASRRoomActivity.class);
 
     final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
 
@@ -124,10 +125,7 @@ public class ASRRoomActivity extends AppCompatActivity implements MessageListene
 
         super.onCreate(savedInstanceState);
         initView();
-
-
-
-        switchToDeviceAuth = SharePreferenceUtil.getBoolean(ASRRoomActivity.this,
+        switchToDeviceAuth = SharePreferenceUtil.getBoolean(SpeakerASRRoomActivity.this,
                 Const.APP_CONFIG_FILE, Const.SWITCH_TO_DEVICE_AUTH);
 
         // 检查sdk运行的必要条件权限
@@ -400,7 +398,7 @@ public class ASRRoomActivity extends AppCompatActivity implements MessageListene
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ASRRoomActivity.this.volume.setText(getString(R.string.volume)+volume);
+                        SpeakerASRRoomActivity.this.volume.setText(getString(R.string.volume)+volume);
                     }
                 });
             }
@@ -447,12 +445,12 @@ public class ASRRoomActivity extends AppCompatActivity implements MessageListene
 //                        aaiClient = new AAIClient(MainActivity.this, appid, projectId, secretId, credentialProvider);
                 //sdk crash 上传
                 if (switchToDeviceAuth) {
-                    aaiClient = new AAIClient(ASRRoomActivity.this, Integer.valueOf(DemoConfig.appIdForDeviceAuth), projectId,
+                    aaiClient = new AAIClient(SpeakerASRRoomActivity.this, Integer.valueOf(DemoConfig.appIdForDeviceAuth), projectId,
                             DemoConfig.secretIdForDeviceAuth, DemoConfig.secretKeyForDeviceAuth,
                             DemoConfig.serialNumForDeviceAuth, DemoConfig.deviceNumForDeviceAuth,
-                            credentialProvider, ASRRoomActivity.this);
+                            credentialProvider, SpeakerASRRoomActivity.this);
                 } else {
-                    aaiClient = new AAIClient(ASRRoomActivity.this, appid, projectId, secretId,secretKey ,credentialProvider);
+                    aaiClient = new AAIClient(SpeakerASRRoomActivity.this, appid, projectId, secretId,secretKey ,credentialProvider);
                 }
             } catch (ClientException e) {
                 e.printStackTrace();
@@ -587,7 +585,7 @@ public class ASRRoomActivity extends AppCompatActivity implements MessageListene
         ((TextView)view.findViewById(R.id.config_secret_id)).setText(getString(R.string.secret_id)+secretId);
         ((TextView)view.findViewById(R.id.config_secret_key)).setText(getString(R.string.secret_key)+secretKey);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(ASRRoomActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(SpeakerASRRoomActivity.this);
         builder.setTitle(getString(R.string.confirm_config));
         builder.setView(view);
         builder.setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener(){
@@ -604,7 +602,7 @@ public class ASRRoomActivity extends AppCompatActivity implements MessageListene
 
 
     public void initView(){
-        setContentView(R.layout.mh_publicroom_activity);
+        setContentView(R.layout.mh_speaker_publicroom_activity);
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra(CommonConst.config);
 
@@ -648,13 +646,13 @@ public class ASRRoomActivity extends AppCompatActivity implements MessageListene
     public void onMessage(final String msg) {
         runOnUiThread(new Runnable() {
             public void run() {
-                Toast.makeText(ASRRoomActivity.this, msg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SpeakerASRRoomActivity.this, msg, Toast.LENGTH_SHORT).show();
             }
         });
     }
     private void setUp_ReturnToolbar( ) {
         toolBar = findViewById(R.id.return_bar);
-        AppCompatActivity activity = (AppCompatActivity) ASRRoomActivity.this;
+        AppCompatActivity activity = (AppCompatActivity) SpeakerASRRoomActivity.this;
         if (activity != null) {
             activity.setSupportActionBar(toolBar);
         }

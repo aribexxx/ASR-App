@@ -14,46 +14,25 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.myapplication.R;
-import com.example.myapplication.models.RoomEntry;
-import com.example.myapplication.views.nav.NavigationHost;
-import com.example.myapplication.views.room_list.RoomGridFragment;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.tencent.iot.speech.app.DemoConfig;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 
-//This fragment user input room name and other info to start a room
-
+ //This fragment user input room name and other info to start a room
+// functions:
+// 1. language setting
+// 2.pub/ priv
+// 3. input room info
 public class StartRoomFragment  extends BottomSheetDialogFragment  {
     ImageButton public_room;
     ImageButton private_room;
     MaterialButton letgo;
-
-
-
-
-  //  SpeakerPublicRoomActivity a_pub_room;
+    TextView roomTitleInput;
+    TextView roomDescriptionInput;
+    SpeakerPublicRoomActivity a_pub_room;
     SpeakerPrivateRoomActivity a_private_room;
 
 
@@ -65,7 +44,6 @@ public class StartRoomFragment  extends BottomSheetDialogFragment  {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Nullable
@@ -77,7 +55,8 @@ public class StartRoomFragment  extends BottomSheetDialogFragment  {
         public_room=view.findViewById(R.id.public_room);
         private_room=view.findViewById(R.id.private_room);
         letgo=view.findViewById(R.id.startroom_button);
-
+        roomDescriptionInput=view.findViewById(R.id.room_description_setting);
+        roomTitleInput=view.findViewById(R.id.room_title_setting);
 
         public_room.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,11 +75,7 @@ public class StartRoomFragment  extends BottomSheetDialogFragment  {
                 room_selected_description.setText("Start a private room");
                 letgo.setText("Start Private Room");
                 selectedRoom=RoomType.PRIVATE_ROOM;
-
-                //first create fragment, which initiate a RoomEntry
-                a_private_room=new SpeakerPrivateRoomActivity();
-                //then prompt password, which set password field in RoomEntry
-                a_private_room.initRoomEtry();
+                Log.println(Log.DEBUG,"ROOM","PRIVATEEEE");
                 promptPasswordSetting();
             }
         });
@@ -108,13 +83,13 @@ public class StartRoomFragment  extends BottomSheetDialogFragment  {
         letgo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+             //click letgo button ,save the room info to RoomEntry
              switch(selectedRoom){
                  case PUBLIC_ROOM:
                      Log.println(Log.DEBUG,"ROOM","PUBLICCCC");
                      //start one room here
-//                     a_pub_room=new PublicRoomFragment();
-//                     a_pub_room.show(getFragmentManager(),a_pub_room.getTag());
+                     a_pub_room=new SpeakerPublicRoomActivity();
+                     a_pub_room.initRoomEtry(roomTitleInput.getText().toString(),roomDescriptionInput.getText().toString());
                      //go to asr room
                      Intent to_asr_public=new Intent(getActivity(), SpeakerPublicRoomActivity.class);
                      startActivity(to_asr_public);
@@ -122,13 +97,11 @@ public class StartRoomFragment  extends BottomSheetDialogFragment  {
                      break;
 
                  case PRIVATE_ROOM:
-                     Log.println(Log.DEBUG,"ROOM","PRIVATEEEE");
-                    if(a_private_room.getRoomEtry().getPassword()!=null){
+                     if (a_private_room.getRoomEtry().getPwd()!=null) {
                         Intent to_asr_private=new Intent(getActivity(), SpeakerPrivateRoomActivity.class);
                         startActivity(to_asr_private);
                     }
-                     Log.println(Log.DEBUG,"ROOM","wooorks"+a_private_room.getRoomEtry().getPassword());
-
+                     Log.println(Log.DEBUG,"ROOM","wooorks"+a_private_room.getRoomEtry().getPwd());
                   //   ((NavigationHost) getActivity()).navigateTo(a_private_room, true); // Navigate to the next Fragment
                      break;
              }
@@ -136,7 +109,6 @@ public class StartRoomFragment  extends BottomSheetDialogFragment  {
                 getFragmentManager().beginTransaction().remove(StartRoomFragment.this).commit();
             }
         });
-
         return view;
     }
 
@@ -153,12 +125,14 @@ public class StartRoomFragment  extends BottomSheetDialogFragment  {
          dialog_builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
              @Override
              public void onClick(DialogInterface dialog, int which) {
+                 //输完密码后才能创建房间OBJEC。 新建的RoomEntry绑定在一个PrivateAcitivty上。
+                 a_private_room=new SpeakerPrivateRoomActivity();
+                 a_private_room.initRoomEtry(roomTitleInput.getText().toString(),roomDescriptionInput.getText().toString());
                  a_private_room.setPasswordPrivateRoom( input_password.getText().toString());
-                 Log.println(Log.DEBUG,"ROOM","wooorks"+a_private_room.getRoomEtry().getPassword());
+                 Log.println(Log.DEBUG,"ROOM","wooorks"+a_private_room.getRoomEtry().getPwd());
 
              }
          });
-
          dialog_builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
              @Override
              public void onClick(DialogInterface dialog, int which) {
@@ -167,6 +141,5 @@ public class StartRoomFragment  extends BottomSheetDialogFragment  {
          });
          dialog_builder.show();
      }
-
 
 }

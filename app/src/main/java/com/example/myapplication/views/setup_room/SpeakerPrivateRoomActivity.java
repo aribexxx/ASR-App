@@ -11,11 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.example.myapplication.R;
-import com.example.myapplication.asr.realtime.ASRRoomActivity;
+import com.example.myapplication.asr.parentclass.SpeakerASRRoomActivity;
 import com.example.myapplication.models.RoomEntry;
 import com.tencent.iot.speech.app.CommonConst;
 
-public class SpeakerPrivateRoomActivity extends ASRRoomActivity {
+public class SpeakerPrivateRoomActivity extends SpeakerASRRoomActivity {
     RoomEntry room;
 
     public SpeakerPrivateRoomActivity(){
@@ -30,7 +30,7 @@ public class SpeakerPrivateRoomActivity extends ASRRoomActivity {
 
     @Override
     public void initView() {
-        setContentView(R.layout.mh_privateroom_activity);
+        setContentView(R.layout.mh_speaker_privateroom_activity);
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra(CommonConst.config);
 
@@ -53,11 +53,11 @@ public class SpeakerPrivateRoomActivity extends ASRRoomActivity {
         volume = (TextView) findViewById(R.id.volume);
         recognizeResult = (EditText) findViewById(R.id.recognize_result);
         handler = new Handler(getMainLooper());
-        recognizeResult.setText("This is aaaa private room");
+        recognizeResult.setText("This is aaaa speaker private room");
     }
 
-    public void initRoomEtry() {
-        this.room = new RoomEntry.Builder().build();
+    public void initRoomEtry(String roomTitle,String roomDescription) {
+        this.room = new RoomEntry.Builder().roomTitle(roomTitle).roomDescription(roomDescription).build();
     }
 
     public RoomEntry getRoomEtry() {
@@ -65,6 +65,6 @@ public class SpeakerPrivateRoomActivity extends ASRRoomActivity {
     }
 
     public void setPasswordPrivateRoom(String password) {
-       room.setPassword(password);
+       room.setPwd(password);
     }
 }

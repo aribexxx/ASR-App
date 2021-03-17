@@ -5,10 +5,49 @@
     android:id="@+id/set_room"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
->
+    android:orientation="vertical">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/room_title_setting_text"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Add a room title">
+
+    </TextView>
+    <TextView
+        android:id="@+id/room_description_setting_text"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Add a room description"
+        android:layout_below="@+id/room_title_setting">
+
+    </TextView>
+    <EditText
+        android:id="@+id/room_title_setting"
+        android:layout_width="800px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="100dp"
+        android:hint="Give this room a name"
+        >
+    </EditText>
+
+    <EditText
+        android:id="@+id/room_description_setting"
+        android:layout_below="@+id/room_title_setting"
+        android:layout_width="800px"
+        android:layout_height="500px"
+        android:layout_marginLeft="100dp"
+        android:hint="What are you planning to talk ?">
+    </EditText>
+</RelativeLayout>
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             >
@@ -17,7 +56,6 @@
                 android:id="@+id/roomType_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_marginTop="156dp"
                 android:text="Start a room"
                 app:layout_constraintEnd_toEndOf="parent"

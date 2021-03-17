@@ -12,7 +12,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.example.myapplication.R;
 import com.example.myapplication.models.RoomEntry;
 import com.example.myapplication.util.network.ImageRequester;
-import com.example.myapplication.views.setup_room.SpeakerPublicRoomActivity;
+import com.example.myapplication.views.setup_room.ListenerPublicRoomActivity;
 
 public class PublicRoomCardViewHolder extends RecyclerView.ViewHolder {
     public NetworkImageView roomImage;
@@ -32,7 +32,7 @@ public class PublicRoomCardViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {// 点击图片，听众打开public房间
                 Context context=v.getContext();
-                Intent go_asr_activity=new Intent(context, SpeakerPublicRoomActivity.class);
+                Intent go_asr_activity=new Intent(context, ListenerPublicRoomActivity.class);
                 context.startActivity(go_asr_activity);
 
             }

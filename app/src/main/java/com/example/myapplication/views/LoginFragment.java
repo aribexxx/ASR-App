@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
+import com.example.myapplication.models.User;
 import com.example.myapplication.views.nav.NavigationHost;
 import com.example.myapplication.views.room_list.RoomGridFragment;
 import com.google.android.material.button.MaterialButton;
@@ -23,6 +24,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.tencent.iot.speech.app.DemoConfig;
 
+import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -38,21 +40,20 @@ import okhttp3.Response;
 
 /**
  * Fragment representing the login screen for MH.
+ *
+ * 调 LOGIN /SIGN UP REQUEST
  */
 public class LoginFragment extends Fragment  {
-
-
-
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.login_fragment, container, false);
-        final TextInputEditText usernameEditText=view.findViewById(R.id.username_edit_text);
+        final TextInputEditText usernameEditText = view.findViewById(R.id.username_edit_text);
         final TextInputLayout passwordtextInput = view.findViewById(R.id.password_text_input);
         final TextInputEditText passwordEditText = view.findViewById(R.id.password_edit_text);
 
-        MaterialButton cancelButton=view.findViewById(R.id.cancel_button);
+        MaterialButton cancelButton = view.findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,94 +61,166 @@ public class LoginFragment extends Fragment  {
                 passwordEditText.setText("");
             }
         });
-        ProgressDialog login_prog=new ProgressDialog(getContext());
 
-        login_prog.setTitle("Processing...");
-        login_prog.setMessage("Please wait...");
-        login_prog.setCancelable(false);
-        login_prog.setIndeterminate(true);
+        ProgressDialog loginProgressDialog = new ProgressDialog(getContext());
+        loginProgressDialog.setTitle("Processing...");
+        loginProgressDialog.setMessage("Please wait...");
+        loginProgressDialog.setCancelable(false);
+        loginProgressDialog.setIndeterminate(true);
 
-        MaterialButton nextButton = view.findViewById(R.id.next_button);
-        // Set an error if the password is less than 8 characters.
-        nextButton.setOnClickListener(new View.OnClickListener() {
+        MaterialButton loginButton = view.findViewById(R.id.next_button);
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!isPasswordValid(passwordEditText.getText())) {
                     passwordtextInput.setError(getString(R.string.shr_error_password));
                 } else {
                     passwordtextInput.setError(null); // Clear the error
-                    login_prog.show();
-                     new Thread(()->{
-                         OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    loginProgressDialog.show();
+                    new Thread(() -> {
+                        OkHttpClient okHttpClient = new OkHttpClient.Builder()
                                  .connectTimeout(10, TimeUnit.SECONDS)
                                  .readTimeout(10,TimeUnit.SECONDS)
                                  .writeTimeout(10, TimeUnit.SECONDS)
                                  .build();
-                         String username=usernameEditText.getText().toString();
-                         String password=passwordEditText.getText().toString();
-
-                         FormBody formBody=new FormBody.Builder().add("userName",username).add("userPwd",password).build();
-                         Request request=new Request.Builder().post(formBody).url(DemoConfig.SERVER_PATH +DemoConfig.ROUTE_LOGIN).build();
-                         Call call= okHttpClient.newCall(request);
+                        String username = usernameEditText.getText().toString();
+                        String password = passwordEditText.getText().toString();
+                        FormBody formBody = new FormBody.Builder().add("userName",username).add("userPwd",password).build();
+                        Request request = new Request.Builder().post(formBody).url(DemoConfig.SERVER_PATH + DemoConfig.ROUTE_LOGIN).build();
+                        Call call = okHttpClient.newCall(request);
 
                         // this makes asynchronous call to server
-                         call.enqueue(new Callback() {
+                        call.enqueue(new Callback() {
                              @Override
                              public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                                 login_prog.dismiss();
-                                e.printStackTrace();
+                                 loginProgressDialog.dismiss();
+                                 e.printStackTrace();
                              }
 
                              @Override
                              public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                                  //dismiss login loading bar
-                                 login_prog.dismiss();
+                                 loginProgressDialog.dismiss();
                                  //handling json response, getting fields
-                                 final String myresponse_json=response.body().string();
+                                 final String myresponse_json = response.body().string();
                                  Log.println(Log.DEBUG,"OUT_JSON",myresponse_json);
-                                 Gson gson=new Gson();
-                                 Properties extract_data=gson.fromJson(myresponse_json,Properties.class);
-                                 String state=extract_data.getProperty("state");
+                                 Gson gson = new Gson();
+                                 Properties extractData = gson.fromJson(myresponse_json,Properties.class);
+                                 String state = extractData.getProperty("state");
                                  Log.println(Log.DEBUG,"LOG",state);
-                                 String message=extract_data.getProperty("message");
+
 
                                // check response "state"
-                                 if(state.equals("0")){
+                                 if (state.equals("1")) {
                                      //need to update UI thread with a new thread,dont block UI thread
+                                     String errorMessage = extractData.getProperty("errorMessage");
                                      getActivity().runOnUiThread(new Runnable() {
                                          @Override
                                          public void run() {
                                              passwordEditText.setText(myresponse_json);
-
-                                             MaterialAlertDialogBuilder dialog_builder;
-                                             dialog_builder=new MaterialAlertDialogBuilder(getActivity()).setTitle(message);
-                                             dialog_builder.show();
+                                             MaterialAlertDialogBuilder dialogBuilder;
+                                             dialogBuilder = new MaterialAlertDialogBuilder(getActivity()).setTitle(errorMessage);
+                                             dialogBuilder.show();
                                          }
-
                                      });
-                                 }
-                                 else if(state.equals("1")){
+                                 } else if (state.equals("0")) { //get UID here
                                      //need to update UI thread with a new thread,dont block UI thread
-                                     getActivity().runOnUiThread(new Runnable() {
-                                         @Override
-                                         public void run() {
-                                             passwordEditText.setText(myresponse_json);
-                                         }
+                                        String userId = extractData.getProperty("userId");
+                                        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                User newUser=new User();
+                                                newUser.setUserId(userId);
+                                                passwordEditText.setText("UserId got "+ newUser.userId);
+                                                ((NavigationHost) Objects.requireNonNull(getActivity())).navigateTo(new RoomGridFragment(), true);
+                                            }
                                      });
-                                 }
-
-                                 ((NavigationHost) getActivity()).navigateTo(new RoomGridFragment(), true);
+                                  }
                              }
-                         });
-
-
-                     }).start();
-
+                        });
+                    }). start();
                  //  ((NavigationHost) getActivity()).navigateTo(new RoomGridFragment(), true); // Navigate to the next Fragment :addtoStack set false , need to navigate back to RoomGrid
                 }
             }
         });
 
+        MaterialButton signupButton = view.findViewById(R.id.sign_up_button);
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!isPasswordValid(passwordEditText.getText())) {
+                    passwordtextInput.setError(getString(R.string.shr_error_password));
+                } else {
+                    passwordtextInput.setError(null); // Clear the error
+                    loginProgressDialog.show();
+                    new Thread(() -> {
+                        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                            .connectTimeout(10, TimeUnit.SECONDS)
+                            .readTimeout(10,TimeUnit.SECONDS)
+                            .writeTimeout(10, TimeUnit.SECONDS)
+                            .build();
+                        String username = usernameEditText.getText().toString();
+                        String password = passwordEditText.getText().toString();
+                        FormBody formBody = new FormBody.Builder().add("userName",username).add("userPwd",password).build();
+                        Request request = new Request.Builder().post(formBody).url(DemoConfig.SERVER_PATH + DemoConfig.ROUTE_SIGNUP).build();
+                        Call call = okHttpClient.newCall(request);
+
+                        // this makes asynchronous call to server
+                        call.enqueue(new Callback() {
+                            @Override
+                            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                                loginProgressDialog.dismiss();
+                                e.printStackTrace();
+                            }
+
+                            @Override
+                            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                //dismiss login loading bar
+                                loginProgressDialog.dismiss();
+                                //handling json response, getting fields
+                                final String myresponse_json = response.body().string();
+                                Log.println(Log.DEBUG,"OUT_JSON",myresponse_json);
+                                Gson gson = new Gson();
+                                Properties extractData = gson.fromJson(myresponse_json,Properties.class);
+                                String state = extractData.getProperty("state");
+                                Log.println(Log.DEBUG,"LOG",state);
+
+
+                                // check response "state"
+                                if (state.equals("1")) {
+                                    //need to update UI thread with a new thread,dont block UI thread
+                                    String errorMessage = extractData.getProperty("errorMessage");
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            passwordEditText.setText(myresponse_json);
+                                            MaterialAlertDialogBuilder dialogBuilder;
+                                            dialogBuilder = new MaterialAlertDialogBuilder(getActivity()).setTitle(errorMessage);
+                                            dialogBuilder.show();
+                                        }
+                                    });
+                                } else if (state.equals("0")) { //get UID here
+                                    //need to update UI thread with a new thread,dont block UI thread
+                                    String userId = extractData.getProperty("userId");
+                                    Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            User newUser=new User();
+                                            newUser.setUserId(userId);
+                                            passwordEditText.setText("UserId got "+ newUser.userId);
+                                            ((NavigationHost) Objects.requireNonNull(getActivity())).navigateTo(new RoomGridFragment(), true);
+                                        }
+                                    }
+                                    );
+                                }
+
+                            }
+                        });
+                    }). start();
+                    //  ((NavigationHost) getActivity()).navigateTo(new RoomGridFragment(), true); // Navigate to the next Fragment :addtoStack set false , need to navigate back to RoomGrid
+                }
+            }
+        });
         // Clear the error once more than 8 characters are typed.
         passwordEditText.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -157,9 +230,7 @@ public class LoginFragment extends Fragment  {
                 }
                 return false;
             }
-
         });
-
         return view;
     }
 
@@ -168,8 +239,6 @@ public class LoginFragment extends Fragment  {
        authentication of the username and password.
     */
     private boolean isPasswordValid(@Nullable Editable text) {
-        return text != null && text.length() >= 8;
+        return text != null;
     }
-
-
 }

@@ -141,14 +141,9 @@ RoomCardRecyclerViewAdapter adapter;
 
                 // This method performs the actual data-refresh operation.
                 // The method calls setRefreshing(false) when it's finished.
-
-
-
-
                //swap items
                 new Handler(getActivity().getMainLooper()).post(new Runnable() {
                     public void run() {
-
                        //Modify here to
                        // adapter.setRoomList(initRoomEntryList_OnServer());
                         adapter.setRoomList(RoomEntry.initRoomEntryList(getResources(),getResources().openRawResource(R.raw.new_rooms)));
@@ -167,9 +162,11 @@ RoomCardRecyclerViewAdapter adapter;
 
     /**
      * Loads server responds and converts it into a list of RoomEntry objects
+     *
+     * Call http request
+     * 4. GET /meetingList
      */
     public  List<RoomEntry> initRoomEntryList_OnServer(){
-
         List<RoomEntry> room_list = null;
         new Thread(()->{
             OkHttpClient okHttpClient = new OkHttpClient.Builder()

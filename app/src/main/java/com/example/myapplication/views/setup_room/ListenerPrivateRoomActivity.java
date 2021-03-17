@@ -1,6 +1,5 @@
 package com.example.myapplication.views.setup_room;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -11,13 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.example.myapplication.R;
-import com.example.myapplication.asr.realtime.ASRRoomActivity;
+import com.example.myapplication.asr.parentclass.ListenerRoomActivity;
 import com.example.myapplication.models.RoomEntry;
-import com.tencent.iot.speech.app.CommonConst;
 
-public class ListenerPrivateRoomActivity extends ASRRoomActivity {
+public class ListenerPrivateRoomActivity extends ListenerRoomActivity {
     RoomEntry room;
-
     public ListenerPrivateRoomActivity(){
 
     }
@@ -28,7 +25,7 @@ public class ListenerPrivateRoomActivity extends ASRRoomActivity {
     }
     @Override
     public void initView(){
-        setContentView(R.layout.mh_privateroom_activity);
+        setContentView(R.layout.mh_listener_privateroom_activity);
 
         // 初始化相应的控件
         //set UI components view
@@ -48,8 +45,7 @@ public class ListenerPrivateRoomActivity extends ASRRoomActivity {
         recognizeState = (TextView) findViewById(R.id.recognize_state);
         volume = (TextView) findViewById(R.id.volume);
         recognizeResult = (EditText) findViewById(R.id.recognize_result);
-        handler = new Handler(getMainLooper());
-        recognizeResult.setText("This is aaaa private room");
+        recognizeResult.setText("This is aaaa listener 私密 room");
     }
 
     public void initRoomEtry(){
@@ -61,6 +57,6 @@ public class ListenerPrivateRoomActivity extends ASRRoomActivity {
     }
 
     public void setPasswordPrivateRoom(String password){
-        this.room.setPassword(password);
+        this.room.setPwd(password);
     }
 }

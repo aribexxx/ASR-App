@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".asr.realtime.ASRRoomActivity">
+        <activity android:name=".asr.parentclass.SpeakerASRRoomActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
@@ -44,6 +44,18 @@
             </intent-filter>
         </activity>
         <activity android:name=".views.setup_room.SpeakerPrivateRoomActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".views.setup_room.ListenerPrivateRoomActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".views.setup_room.ListenerPublicRoomActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>

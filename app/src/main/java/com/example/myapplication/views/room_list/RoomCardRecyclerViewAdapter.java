@@ -32,12 +32,7 @@ public class RoomCardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position){
-       if(TextUtils.isEmpty(roomList.get(position).getPassword())){
-           return TYPE_PUBLIC;
-       }
-       else{
-           return TYPE_PRIVATE;
-       }
+        return roomList.get(position).getListItemType();
     }
 
     @NonNull
