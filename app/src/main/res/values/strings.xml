@@ -41,4 +41,11 @@
     <string name="extended_fab_label">Start a room</string>
     <string name="public_room_identifer">Welcome everyone</string>
     <string name="sign_up_text">Sign Up</string>
+
+    <!--翻译语言方向设置选项-->
+    <string-array name="language_direction">
+        <item>zh->en</item>
+        <item>en->zh</item>
+
+    </string-array>
 </resources>

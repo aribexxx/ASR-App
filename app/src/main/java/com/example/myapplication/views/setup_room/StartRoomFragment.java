@@ -11,8 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,6 +39,7 @@ public class StartRoomFragment  extends BottomSheetDialogFragment  {
     TextView roomDescriptionInput;
     SpeakerPublicRoomActivity a_pub_room;
     SpeakerPrivateRoomActivity a_private_room;
+
 
 
     enum RoomType{
@@ -72,6 +75,17 @@ public class StartRoomFragment  extends BottomSheetDialogFragment  {
             }
         });
 
+        //set language direction spinner-------------
+        Spinner spinner = (Spinner) view.findViewById(R.id.language_setting_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+            R.array.language_direction, android.R.layout.simple_spinner_item);
+         // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+         // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+
+        // public room button--------------
         public_room.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

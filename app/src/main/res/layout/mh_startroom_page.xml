@@ -40,11 +40,28 @@
         android:id="@+id/room_description_setting"
         android:layout_below="@+id/room_title_setting"
         android:layout_width="800px"
-        android:layout_height="500px"
+        android:layout_height="400px"
         android:layout_marginLeft="100dp"
         android:imeOptions="actionDone"
         android:hint="What are you planning to talk ?">
     </EditText>
+    <TextView
+        android:id="@+id/language_setting_text"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Language setting"
+        android:layout_below="@+id/room_description_setting">
+
+    </TextView>
+
+    <Spinner
+        android:id="@+id/language_setting_spinner"
+        android:layout_toRightOf="@+id/language_setting_text"
+        android:layout_below="@id/room_description_setting"
+        android:layout_width="400px"
+        android:layout_height="wrap_content"
+        />
+
 </RelativeLayout>
 
 
