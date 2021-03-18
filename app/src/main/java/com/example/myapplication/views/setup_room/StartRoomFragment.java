@@ -1,13 +1,16 @@
  package com.example.myapplication.views.setup_room;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -57,6 +60,17 @@ public class StartRoomFragment  extends BottomSheetDialogFragment  {
         letgo=view.findViewById(R.id.startroom_button);
         roomDescriptionInput=view.findViewById(R.id.room_description_setting);
         roomTitleInput=view.findViewById(R.id.room_title_setting);
+
+        //this part add listner to detect user input, if finish remove keyboard.
+        roomDescriptionInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (event != null&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    InputMethodManager in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    in.hideSoftInputFromWindow(roomDescriptionInput.getApplicationWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+                return false;
+            }
+        });
 
         public_room.setOnClickListener(new View.OnClickListener() {
             @Override

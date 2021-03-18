@@ -18,8 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * Adapter used to show a list of rooms
  */
 public class RoomCardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static int TYPE_PUBLIC = 1;
-    private static int TYPE_PRIVATE = 2;
+
     private final Context context;
     private  List<RoomEntry> roomList;
 
@@ -39,7 +38,8 @@ public class RoomCardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = null;
-        if (viewType == TYPE_PUBLIC) { // for call layout
+        //在RoomCardType interface 里有定义 ，1 为公共，2 为私密。
+        if (viewType == 1) { // for call layout
             view = LayoutInflater
                     .from(parent.getContext())
                     .inflate(R.layout.public_room_card, parent, false);
@@ -55,7 +55,7 @@ public class RoomCardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         if (roomList != null && position < roomList.size()) {
-            if (getItemViewType(position) == TYPE_PUBLIC) {
+            if (getItemViewType(position) == 1) {
                 ((PublicRoomCardViewHolder) viewHolder).bindType(roomList.get(position));
             } else {
                 ((PrivateRoomCardViewHolder) viewHolder).bindType(roomList.get(position));
@@ -63,9 +63,6 @@ public class RoomCardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    public List<RoomEntry> getRoomList(){
-        return roomList;
-    }
     public void setRoomList(List<RoomEntry> rooms){
          roomList=rooms;
     }

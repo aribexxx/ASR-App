@@ -99,6 +99,8 @@ public class RoomEntry implements RoomCardType {
         }
         String jsonRoomsString = writer.toString();
         Gson gson = new Gson();
+
+        //这里装在Json需要Raw里的数据格式和 定义的Field 名称一致！！否则私密房间无法正确显示。
         Type roomListType = new TypeToken<ArrayList<RoomEntry>>() {
         }.getType();
         return gson.fromJson(jsonRoomsString, roomListType);

@@ -77,7 +77,6 @@ RoomCardRecyclerViewAdapter adapter;
         //init Fab
         initFab(view);
 
-
         // Set up the RecyclerView for rooms display
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
