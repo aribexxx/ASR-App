@@ -1,4 +1,4 @@
- package com.example.myapplication.views.setup_room;
+ package com.example.myapplication.views.setuproom;
 
 import android.content.Context;
 import android.content.DialogInterface;

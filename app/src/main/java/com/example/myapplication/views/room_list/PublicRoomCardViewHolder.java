@@ -12,7 +12,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.example.myapplication.R;
 import com.example.myapplication.models.RoomEntry;
 import com.example.myapplication.util.network.ImageRequester;
-import com.example.myapplication.views.setup_room.ListenerPublicRoomActivity;
+import com.example.myapplication.views.setuproom.ListenerPublicRoomActivity;
 
 public class PublicRoomCardViewHolder extends RecyclerView.ViewHolder {
     public NetworkImageView roomImage;

@@ -1,26 +1,24 @@
-package com.example.myapplication.views.setup_room;
+package com.example.myapplication.views.setuproom;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
+import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.example.myapplication.R;
-import com.example.myapplication.asr.parentclass.SpeakerASRRoomActivity;
+import com.example.myapplication.asr.parentclass.ListenerRoomActivity;
 import com.example.myapplication.models.RoomEntry;
-import com.tencent.iot.speech.app.CommonConst;
 
-public class SpeakerPrivateRoomActivity extends SpeakerASRRoomActivity {
+public class ListenerPublicRoomActivity extends ListenerRoomActivity {
     RoomEntry room;
+    EditText recognizeResult;
 
-    public SpeakerPrivateRoomActivity(){
-
-    }
+    public ListenerPublicRoomActivity() {
+        this.room=new RoomEntry.Builder().build();
+   }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,10 +27,8 @@ public class SpeakerPrivateRoomActivity extends SpeakerASRRoomActivity {
     }
 
     @Override
-    public void initView() {
-        setContentView(R.layout.mh_speaker_privateroom_activity);
-        Intent intent = getIntent();
-        Bundle bundle = intent.getBundleExtra(CommonConst.config);
+    public void initView(){
+        setContentView(R.layout.mh_listener_publicroom_activity);
 
         // 初始化相应的控件
         //set UI components view
@@ -52,19 +48,8 @@ public class SpeakerPrivateRoomActivity extends SpeakerASRRoomActivity {
         recognizeState = (TextView) findViewById(R.id.recognize_state);
         volume = (TextView) findViewById(R.id.volume);
         recognizeResult = (EditText) findViewById(R.id.recognize_result);
-        handler = new Handler(getMainLooper());
-        recognizeResult.setText("This is aaaa speaker private room");
+        recognizeResult.setText("This is aaaa listener public room");
     }
 
-    public void initRoomEtry(String roomTitle,String roomDescription) {
-        this.room = new RoomEntry.Builder().roomTitle(roomTitle).roomDescription(roomDescription).build();
-    }
 
-    public RoomEntry getRoomEtry() {
-        return  room;
-    }
-
-    public void setPasswordPrivateRoom(String password) {
-       room.setPwd(password);
-    }
 }

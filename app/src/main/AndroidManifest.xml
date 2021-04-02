@@ -38,24 +38,24 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".views.setup_room.SpeakerPublicRoomActivity">
+        <activity android:name=".views.setuproom.SpeakerPublicRoomActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
-        <activity android:name=".views.setup_room.SpeakerPrivateRoomActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".views.setup_room.ListenerPrivateRoomActivity">
+        <activity android:name=".views.setuproom.SpeakerPrivateRoomActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".views.setup_room.ListenerPublicRoomActivity">
+        <activity android:name=".views.setuproom.ListenerPrivateRoomActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".views.setuproom.ListenerPublicRoomActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>

@@ -110,16 +110,18 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
     }
 
     LinkedHashMap<String, String> resMap = new LinkedHashMap<>();
+
     private String buildMessage(Map<String, String> msg) {
 
         StringBuffer stringBuffer = new StringBuffer();
         Iterator<Map.Entry<String, String>> iter = msg.entrySet().iterator();
         while (iter.hasNext()) {
             String value = iter.next().getValue();
-            stringBuffer.append(value+"\r\n");
+            stringBuffer.append(value + "\r\n");
         }
         return stringBuffer.toString();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -141,7 +143,6 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
         final int projectId = 0;
         final String secretId = DemoConfig.secretId;
         final String secretKey = DemoConfig.secretKey;
-
         AAILogger.info(logger, "config : appid={}, projectId={}, secretId={}, secretKey={}", appid, projectId, secretId, secretKey);
 
         // 签名鉴权类，sdk中给出了一个本地的鉴权类，但由于需要用户提供secretKey，这可能会导致一些安全上的问题，
@@ -174,9 +175,9 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
 
                 if (dontHaveResult && !TextUtils.isEmpty(result.getText())) {
                     dontHaveResult = false;
-                    Date date=new Date();
-                    DateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
-                    String time=format.format(date);
+                    Date date = new Date();
+                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+                    String time = format.format(date);
                     String message = String.format("voice flow order = %d, receive first response in %s, result is = %s", seq, time, result.getText());
                     Log.i(PERFORMANCE_TAG, message);
                 }
@@ -185,7 +186,7 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
                 AAILogger.info(logger, "分片slice seq = {}, voiceid = {}, result = {}", seq, result.getVoiceId(), result.getText());
                 resMap.put(String.valueOf(seq), result.getText());
                 final String msg = buildMessage(resMap);
-                AAILogger.info(logger, "分片slice msg="+msg);
+                AAILogger.info(logger, "分片slice msg=" + msg);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -208,7 +209,7 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
                 AAILogger.info(logger, "语音流segment seq = {}, voiceid = {}, result = {}", seq, result.getVoiceId(), result.getText());
                 resMap.put(String.valueOf(seq), result.getText());
                 final String msg = buildMessage(resMap);
-                AAILogger.info(logger, "语音流segment msg="+msg);
+                AAILogger.info(logger, "语音流segment msg=" + msg);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -236,33 +237,30 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
              */
             @Override
             public void onFailure(AudioRecognizeRequest request, final ClientException clientException, final ServerException serverException) {
-                if (clientException!=null) {
-                    AAILogger.info(logger, "onFailure..:"+clientException.toString());
+                if (clientException != null) {
+                    AAILogger.info(logger, "onFailure..:" + clientException.toString());
                 }
-                if (serverException!=null) {
-                    AAILogger.info(logger, "onFailure..:"+serverException.toString());
+                if (serverException != null) {
+                    AAILogger.info(logger, "onFailure..:" + serverException.toString());
                 }
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
 
                         if (clientException != null) {
-                            recognizeState.setText("识别状态：失败,  "+clientException.toString());
-                            AAILogger.info(logger, "识别状态：失败,  "+clientException.toString());
-                        } else if (serverException!=null) {
-                            recognizeState.setText("识别状态：失败,  "+serverException.toString());
+                            recognizeState.setText("识别状态：失败,  " + clientException.toString());
+                            AAILogger.info(logger, "识别状态：失败,  " + clientException.toString());
+                        } else if (serverException != null) {
+                            recognizeState.setText("识别状态：失败,  " + serverException.toString());
                         }
                     }
                 });
             }
         };
-
-
         /**
          * 识别状态监听器
          */
         final AudioRecognizeStateListener audioRecognizeStateListener = new AudioRecognizeStateListener() {
-
             /**
              * 开始录音
              * @param request
@@ -324,9 +322,9 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
             @Override
             public void onVoiceFlowFinishRecognize(AudioRecognizeRequest request, int seq) {
 
-                Date date=new Date();
-                DateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
-                String time=format.format(date);
+                Date date = new Date();
+                DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+                String time = format.format(date);
                 String message = String.format("voice flow order = %d, recognize finish in %s", seq, time);
                 Log.i(PERFORMANCE_TAG, message);
 
@@ -348,7 +346,7 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
             @Override
             public void onVoiceFlowStart(AudioRecognizeRequest request, int seq) {
 
-                Date date=new Date();
+                Date date = new Date();
                 DateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
                 String time=format.format(date);
                 String message = String.format("voice flow order = %d, start in %s", seq, time);
@@ -450,7 +448,7 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
                             DemoConfig.serialNumForDeviceAuth, DemoConfig.deviceNumForDeviceAuth,
                             credentialProvider, SpeakerASRRoomActivity.this);
                 } else {
-                    aaiClient = new AAIClient(SpeakerASRRoomActivity.this, appid, projectId, secretId,secretKey ,credentialProvider);
+                    aaiClient = new AAIClient(SpeakerASRRoomActivity.this, appid, projectId, secretId,secretKey, credentialProvider);
                 }
             } catch (ClientException e) {
                 e.printStackTrace();
@@ -597,7 +595,6 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
 
         AlertDialog dialog = builder.create();
 //        dialog.show();
-
     }
 
 
@@ -641,7 +638,6 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
 
     }
 
-
     @Override
     public void onMessage(final String msg) {
         runOnUiThread(new Runnable() {
@@ -650,7 +646,8 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
             }
         });
     }
-    private void setUp_ReturnToolbar( ) {
+
+    private void setUp_ReturnToolbar() {
         toolBar = findViewById(R.id.return_bar);
         AppCompatActivity activity = (AppCompatActivity) SpeakerASRRoomActivity.this;
         if (activity != null) {

@@ -1,26 +1,22 @@
-package com.example.myapplication.views.setup_room;
+package com.example.myapplication.views.setuproom;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
 import android.widget.TextView;
+
 import androidx.annotation.Nullable;
 
 import com.example.myapplication.R;
 import com.example.myapplication.asr.parentclass.ListenerRoomActivity;
 import com.example.myapplication.models.RoomEntry;
 
-public class ListenerPublicRoomActivity extends ListenerRoomActivity {
+public class ListenerPrivateRoomActivity extends ListenerRoomActivity {
     RoomEntry room;
-    EditText recognizeResult;
+    public ListenerPrivateRoomActivity(){
 
-    public ListenerPublicRoomActivity() {
-        this.room=new RoomEntry.Builder().build();
-   }
-
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +24,7 @@ public class ListenerPublicRoomActivity extends ListenerRoomActivity {
     }
     @Override
     public void initView(){
-        setContentView(R.layout.mh_listener_publicroom_activity);
+        setContentView(R.layout.mh_listener_privateroom_activity);
 
         // 初始化相应的控件
         //set UI components view
@@ -48,8 +44,18 @@ public class ListenerPublicRoomActivity extends ListenerRoomActivity {
         recognizeState = (TextView) findViewById(R.id.recognize_state);
         volume = (TextView) findViewById(R.id.volume);
         recognizeResult = (EditText) findViewById(R.id.recognize_result);
-        recognizeResult.setText("This is aaaa listener public room");
+        recognizeResult.setText("This is aaaa listener 私密 room");
     }
 
+    public void initRoomEtry(){
+        this.room=new RoomEntry.Builder().build();
+    }
 
+    public RoomEntry getRoomEtry(){
+           return  room;
+    }
+
+    public void setPasswordPrivateRoom(String password){
+        this.room.setPwd(password);
+    }
 }
