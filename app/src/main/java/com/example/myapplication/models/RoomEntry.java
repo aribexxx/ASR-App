@@ -37,20 +37,23 @@ public class RoomEntry implements RoomCardType {
     private String url;
 
     public RoomEntry(Builder builder) {
-     this.roomTitle=builder.roomTitle;
-     this.userName =builder.speakerName;
-     this.roomID=builder.roomID;
-     this.pwd =builder.password;
-     this.roomDescription=builder.roomDescription;
-     this.direct=builder.direct;
+        this.roomTitle = builder.roomTitle;
+        this.userName = builder.speakerName;
+        this.roomID = builder.roomID;
+        this.pwd = builder.password;
+        this.roomDescription = builder.roomDescription;
+        this.direct = builder.direct;
 
     }
+
     public void setPwd(String pwd) {
         this.pwd = pwd;
     }
+
     public String getPwd() {
         return pwd;
     }
+
     public String getRoomTitle() {
         return roomTitle;
     }
@@ -78,8 +81,8 @@ public class RoomEntry implements RoomCardType {
     /**
      * Loads a raw JSON at R.raw and converts it into a list of RoomEntry objects
      */
-    public static List<RoomEntry> initRoomEntryList(Resources resources,InputStream inputStream) {
-      //  inputStream = resources.openRawResource(R.raw.rooms);
+    public static List<RoomEntry> initRoomEntryList(Resources resources, InputStream inputStream) {
+        //  inputStream = resources.openRawResource(R.raw.rooms);
         Writer writer = new StringWriter();
         char[] buffer = new char[1024];
         try {
@@ -108,10 +111,9 @@ public class RoomEntry implements RoomCardType {
 
     @Override
     public int getListItemType() {
-        if(this.pwd ==null){
+        if (this.pwd == null) {
             return Public_Room_Card;
-        }
-        else {
+        } else {
             return Private_Room_Card;
         }
     }
@@ -133,10 +135,12 @@ public class RoomEntry implements RoomCardType {
             speakerName = "Speaker name unknown";
             roomID = "Need description";
         }
+
         /**
          * 实际属性配置方法
+         *
          * @param roomTitle
-         * @return
+         * @return Builder
          */
         public Builder roomTitle(String roomTitle) {
             this.roomTitle = roomTitle;
@@ -147,29 +151,38 @@ public class RoomEntry implements RoomCardType {
             this.speakerName = speakerName;
             return this;
         }
+
         public Builder roomDescription(String roomDescription) {
             this.roomDescription = roomDescription;
             return this;
         }
+
         public Builder direct(String direct) {
             this.direct = direct;
             return this;
         }
+
         public Builder roomID(String roomID) {
-            if (roomID == null) throw new NullPointerException("没roomID?? 必须要");
+            if (roomID == null) {
+                throw new NullPointerException("没roomID?? 必须要");
+            }
             this.roomID = roomID;
             return this;
         }
+
         public Builder password(String password) {
             this.password = password;
             return this;
         }
+
         public Builder url(String url) {
             this.url = url;
             return this;
         }
+
         /**
          * 最后创造出实体car
+         *
          * @return
          */
         public RoomEntry build() {
