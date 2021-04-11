@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.myapplication.R;
 import com.google.android.material.button.MaterialButton;
 
+
 // parent class for public and private listener room
 // get meetinglist from server and display all existing rooms
 
@@ -31,8 +32,9 @@ public class ListenerRoomActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         initView();
+        super.onCreate(savedInstanceState);
+
     }
 
     public void initView(){

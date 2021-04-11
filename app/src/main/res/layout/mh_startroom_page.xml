@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/set_room"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -66,93 +67,85 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+        android:layout_width="match_parent"
+        android:layout_height="156dp">
 
-            <TextView
-                android:id="@+id/roomType_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="156dp"
-                android:text="Start a room"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/roomType_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="156dp"
+            android:text="Start a room"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <View
-                android:id="@+id/seperator"
-                android:layout_width="300dp"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintBottom_toBottomOf="@id/seperator"
-                app:layout_constraintBottom_toTopOf="@+id/startroom_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.495"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/roomType_description"
-                app:layout_constraintVertical_bias="1.0" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/startroom_button"
+            style="@style/Widget.MockHouse.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="Let's Go"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/startroom_button"
-                style="@style/Widget.MockHouse.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:text="Let's Go"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                />
+        <ImageButton
+            android:id="@+id/public_room"
+            android:layout_width="66dp"
+            android:layout_height="60dp"
+            android:src="@mipmap/ic_launcher_round"
+            android:text="public room"
+            app:layout_constraintBottom_toTopOf="@+id/roomType_description"
+            app:layout_constraintEnd_toStartOf="@+id/private_room"
+            app:layout_constraintHorizontal_bias="0.522"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.179" />
 
-            <ImageButton
-                android:id="@+id/public_room"
-                android:layout_width="66dp"
-                android:layout_height="59dp"
-                android:text="public room"
-                app:layout_constraintBottom_toTopOf="@+id/roomType_description"
-                app:layout_constraintEnd_toStartOf="@+id/private_room"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:src="@mipmap/ic_launcher_round"/>
+        <TextView
+            android:id="@+id/public_room_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="150dp"
+            android:text="public room"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.465"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/public_room">
 
-            <TextView
-                android:id="@+id/public_room_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="150dp"
-                android:text="public room"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/public_room">
+        </TextView>
 
-            </TextView>
+        <ImageButton
+            android:id="@+id/private_room"
+            android:layout_width="66dp"
+            android:layout_height="59dp"
+            android:layout_marginEnd="104dp"
+            android:src="@mipmap/ic_launcher_round"
+            android:text="private room"
+            app:layout_constraintBottom_toTopOf="@+id/roomType_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.164" />
 
-            <ImageButton
-                android:id="@+id/private_room"
-                android:text="private room"
-                android:layout_width="66dp"
-                android:layout_height="59dp"
-                android:layout_marginEnd="88dp"
-                app:layout_constraintBottom_toTopOf="@+id/roomType_description"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:src="@mipmap/ic_launcher_round" />
+        <TextView
+            android:id="@+id/private_room_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="150dp"
+            android:layout_marginTop="12dp"
+            android:text="private room"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.489"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/private_room">
 
-            <TextView
-                android:id="@+id/private_room_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="private room"
-                android:layout_marginLeft="150dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/private_room">
-
-            </TextView>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </TextView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </LinearLayout>

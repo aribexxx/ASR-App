@@ -13,14 +13,16 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.example.myapplication.R;
+
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -56,7 +58,8 @@ public class StartRoomFragment extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment with the ProductGrid theme
-        View view = inflater.inflate(R.layout.mh_startroom_page, container, false);
+        View view = inflater.inflate(R.layout.mh_startroom_page, container,false);
+
         publicRoom = view.findViewById(R.id.public_room);
         privateRoom = view.findViewById(R.id.private_room);
         letgo = view.findViewById(R.id.startroom_button);
@@ -136,6 +139,9 @@ public class StartRoomFragment extends BottomSheetDialogFragment {
                 }
                 // click lets go button , also remove current fragment
                 getFragmentManager().beginTransaction().remove(StartRoomFragment.this).commit();
+                //clear text in inputbox
+                roomDescriptionInput.setText("");
+                roomTitleInput.setText("");
             }
         });
         return view;
