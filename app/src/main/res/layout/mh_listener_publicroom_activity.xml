@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/public_room_main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="100dp"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/return_bar_layout">
+
+<!--App menu bar -->
+<com.google.android.material.appbar.AppBarLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:elevation="0dp">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/return_bar"
+        style="@style/Widget.MockHouse.Toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="@drawable/ic_baseline_arrow_downward_24"
+        app:title="Listener Public Room" />
+</com.google.android.material.appbar.AppBarLayout>
+
+</RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:id="@+id/public_room_section"
+      android:layout_below="@+id/return_bar_layout"
+      android:gravity="top">
+
+
+
+      <EditText
+        android:id="@+id/recognize_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is a listener Public Room"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+      <com.google.android.material.button.MaterialButton
+          android:id="@+id/leaveroom_button"
+          style="@style/Widget.MockHouse.Button"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/recognize_result"
+          android:text="Leave quietly"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.177"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/recognize_result"
+          app:layout_constraintVertical_bias="0.878" />
+
+
+
+
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</RelativeLayout>

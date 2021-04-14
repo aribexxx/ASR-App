@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/set_room"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/room_title_setting_text"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Add a room title">
+
+    </TextView>
+    <TextView
+        android:id="@+id/room_description_setting_text"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Add a room description"
+        android:layout_below="@+id/room_title_setting">
+
+    </TextView>
+    <EditText
+        android:id="@+id/room_title_setting"
+        android:layout_width="800px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="100dp"
+        android:hint="Give this room a name"
+        android:imeOptions="actionDone"
+        >
+    </EditText>
+
+    <EditText
+        android:id="@+id/room_description_setting"
+        android:layout_below="@+id/room_title_setting"
+        android:layout_width="800px"
+        android:layout_height="400px"
+        android:layout_marginLeft="100dp"
+        android:imeOptions="actionDone"
+        android:hint="What are you planning to talk ?">
+    </EditText>
+    <TextView
+        android:id="@+id/language_setting_text"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Language setting"
+        android:layout_below="@+id/room_description_setting">
+
+    </TextView>
+
+    <Spinner
+        android:id="@+id/language_setting_spinner"
+        android:layout_toRightOf="@+id/language_setting_text"
+        android:layout_below="@id/room_description_setting"
+        android:layout_width="400px"
+        android:layout_height="wrap_content"
+        />
+
+</RelativeLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <TextView
+                android:id="@+id/roomType_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="156dp"
+                android:text="Start a room"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/seperator"
+                android:layout_width="300dp"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintBottom_toBottomOf="@id/seperator"
+                app:layout_constraintBottom_toTopOf="@+id/startroom_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/roomType_description"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/startroom_button"
+                style="@style/Widget.MockHouse.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="Let's Go"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+            <ImageButton
+                android:id="@+id/public_room"
+                android:layout_width="66dp"
+                android:layout_height="59dp"
+                android:text="public room"
+                app:layout_constraintBottom_toTopOf="@+id/roomType_description"
+                app:layout_constraintEnd_toStartOf="@+id/private_room"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@mipmap/ic_launcher_round"/>
+
+            <TextView
+                android:id="@+id/public_room_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="150dp"
+                android:text="public room"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/public_room">
+
+            </TextView>
+
+            <ImageButton
+                android:id="@+id/private_room"
+                android:text="private room"
+                android:layout_width="66dp"
+                android:layout_height="59dp"
+                android:layout_marginEnd="88dp"
+                app:layout_constraintBottom_toTopOf="@+id/roomType_description"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@mipmap/ic_launcher_round" />
+
+            <TextView
+                android:id="@+id/private_room_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="private room"
+                android:layout_marginLeft="150dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/private_room">
+
+            </TextView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>
