@@ -20,6 +20,7 @@ import androidx.navigation.NavController;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.myapplication.R;
+import com.example.myapplication.models.MeetingListRes;
 import com.example.myapplication.models.RoomEntry;
 import com.example.myapplication.views.setuproom.StartRoomFragment;
 
@@ -31,6 +32,7 @@ import com.tencent.iot.speech.app.DemoConfig;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +53,7 @@ StartRoomFragment startroom_frag;
 SwipeRefreshLayout my_swipe_refresh;
 List<RoomEntry> roomlist;
 RoomCardRecyclerViewAdapter adapter;
+RecyclerView recyclerView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,18 +81,19 @@ RoomCardRecyclerViewAdapter adapter;
         initFab(view);
 
         // Set up the RecyclerView for rooms display
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.VERTICAL, false));
-       // recyclerView.setLayoutManager(new );
-        roomlist=RoomEntry.initRoomEntryList(getResources(),getResources().openRawResource(R.raw.rooms));
-         adapter = new RoomCardRecyclerViewAdapter(this.getContext(),
-                roomlist);
-       // Log.println(Log.DEBUG,"SHOW",RoomEntry.initRoomEntryList(getResources()).toArray().toString());
-        recyclerView.setAdapter(adapter);
-        int largePadding = getResources().getDimensionPixelSize(R.dimen.shr_product_grid_spacing);
-        int smallPadding = getResources().getDimensionPixelSize(R.dimen.shr_product_grid_spacing_small);
-        recyclerView.addItemDecoration(new RoomGridItemDecoration(largePadding, smallPadding));
+        //recyclerView.setLayoutManager(new );
+        //roomlist=RoomEntry.initRoomEntryList(getResources(),getResources().openRawResource(R.raw.rooms));
+        //adapter = new RoomCardRecyclerViewAdapter(this.getContext(), roomlist);
+        //Log.println(Log.DEBUG,"SHOW",RoomEntry.initRoomEntryList(getResources()).toArray().toString());
+        //recyclerView.setAdapter(adapter);
+        //int largePadding = getResources().getDimensionPixelSize(R.dimen.shr_product_grid_spacing);
+        //int smallPadding = getResources().getDimensionPixelSize(R.dimen.shr_product_grid_spacing_small);
+        //recyclerView.addItemDecoration(new RoomGridItemDecoration(largePadding, smallPadding));
+
+        initRoomEntryList_OnServer();
 
 
         return view;
@@ -138,19 +142,21 @@ RoomCardRecyclerViewAdapter adapter;
             public void onRefresh() {
                 Log.i("RF", "onRefresh called from SwipeRefreshLayout");
 
+                initRoomEntryList_OnServer();
                 // This method performs the actual data-refresh operation.
                 // The method calls setRefreshing(false) when it's finished.
                //swap items
-                new Handler(getActivity().getMainLooper()).post(new Runnable() {
-                    public void run() {
-                       //Modify here to
-                       // adapter.setRoomList(initRoomEntryList_OnServer());
-                        adapter.setRoomList(RoomEntry.initRoomEntryList(getResources(),getResources().openRawResource(R.raw.new_rooms)));
-                        adapter.notifyDataSetChanged();
-                        Log.i("RF", "finish");
-                        my_swipe_refresh.setRefreshing(false);
-                    }
-                });
+                //new Handler(getActivity().getMainLooper()).post(new Runnable() {
+                //    public void run() {
+                //        initRoomEntryList_OnServer();
+                //       //Modify here to
+                //        //adapter.setRoomList(initRoomEntryList_OnServer());
+                //        //adapter.setRoomList(RoomEntry.initRoomEntryList(getResources(),getResources().openRawResource(R.raw.new_rooms)));
+                //        //adapter.notifyDataSetChanged();
+                //        //Log.i("RF", "finish");
+                //        //my_swipe_refresh.setRefreshing(false);
+                //    }
+                //});
 
             }
         });
@@ -165,8 +171,9 @@ RoomCardRecyclerViewAdapter adapter;
      * Call http request
      * 4. GET /meetingList
      */
-    public  List<RoomEntry> initRoomEntryList_OnServer(){
-        List<RoomEntry> room_list = null;
+    //public  List<RoomEntry> initRoomEntryList_OnServer(){
+    public  void initRoomEntryList_OnServer(){
+        List<RoomEntry> room_list = new ArrayList<>();
         new Thread(()->{
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .connectTimeout(10, TimeUnit.SECONDS)
@@ -191,20 +198,43 @@ RoomCardRecyclerViewAdapter adapter;
                     //handling json response, getting a list of existing rooms info
                     final String myresponse_json=response.body().string();
                     Gson gson = new Gson();
-                    Properties data=gson.fromJson(myresponse_json,Properties.class);
-                    String state=data.getProperty("state");
-                    String all_rooms=data.getProperty("meeting");
-                    
-                    
+                    MeetingListRes data = gson.fromJson(myresponse_json,MeetingListRes.class);
+                    String state=data.getState();
+                    List<MeetingListRes.Meeting> all_rooms=data.getMeeting();
+                    for (MeetingListRes.Meeting meeting : all_rooms){
+                        RoomEntry.Builder builder = new RoomEntry.Builder();
+                        builder.roomID(meeting.getMeetingId());
+                        builder.password(meeting.getPwd());
+                        builder.speakerName(meeting.getUserName());
+                        builder.roomTitle(meeting.getRoomTitle());
+                        builder.roomDescription(meeting.getRoomDescription());
+                        builder.direct(meeting.getDirect());
+                        builder.url(meeting.getImageUrl());
+                        RoomEntry roomEntry = new RoomEntry(builder);
+                        room_list.add(roomEntry);
+                    }
+
                     // check response "state"
                     if(state.equals("0")){
                         //need to update UI thread with a new thread,dont block UI thread
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                MaterialAlertDialogBuilder dialog_builder;
-                                dialog_builder=new MaterialAlertDialogBuilder(getActivity()).setTitle("Fail to get room list from server");
-                                dialog_builder.show();
+
+                                if (adapter==null) {
+                                    adapter = new RoomCardRecyclerViewAdapter(getActivity(), roomlist);
+                                }
+
+                                adapter.setRoomList(room_list);
+                                //adapter.setRoomList(RoomEntry.initRoomEntryList(getResources(),getResources().openRawResource(R.raw.new_rooms)));
+                                adapter.notifyDataSetChanged();
+                                recyclerView.setAdapter(adapter);
+                                Log.i("RF", "finish");
+                                if (my_swipe_refresh != null ) {
+                                    if (my_swipe_refresh.isRefreshing()) {
+                                        my_swipe_refresh.setRefreshing(false);
+                                    }
+                                }
                             }
 
                         });
@@ -214,6 +244,9 @@ RoomCardRecyclerViewAdapter adapter;
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                MaterialAlertDialogBuilder dialog_builder;
+                                dialog_builder=new MaterialAlertDialogBuilder(getActivity()).setTitle("Fail to get room list from server");
+                                dialog_builder.show();
                            
                             }
                         });
@@ -225,7 +258,7 @@ RoomCardRecyclerViewAdapter adapter;
 
         }).start();
 
-      return room_list;
+      //return room_list;
 
     }
 

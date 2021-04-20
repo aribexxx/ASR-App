@@ -1,6 +1,7 @@
 package com.example.myapplication.views.setuproom;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,14 +15,16 @@ import com.example.myapplication.models.RoomEntry;
 
 public class ListenerPrivateRoomActivity extends ListenerRoomActivity {
     RoomEntry room;
+    EditText recognizeResult;
     public ListenerPrivateRoomActivity(){
 
     }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        initView();
     }
+
     @Override
     public void initView(){
         setContentView(R.layout.mh_listener_privateroom_activity);
@@ -30,12 +33,9 @@ public class ListenerPrivateRoomActivity extends ListenerRoomActivity {
         //set UI components view
         leaveRoom = findViewById(R.id.leaveroom_button);
         //set leave room button click
-        leaveRoom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-
-            }
+        leaveRoom.setOnClickListener(v -> {
+            super.closeWebSocket();
+            finish();
         });
 
         start = (Button) findViewById(R.id.start);
@@ -44,7 +44,11 @@ public class ListenerPrivateRoomActivity extends ListenerRoomActivity {
         recognizeState = (TextView) findViewById(R.id.recognize_state);
         volume = (TextView) findViewById(R.id.volume);
         recognizeResult = (EditText) findViewById(R.id.recognize_result);
-        recognizeResult.setText("This is aaaa listener 私密 room");
+        //recognizeResult.setText("This is aaaa listener 私密 room");
+
+        handler = new Handler(getMainLooper()); // used by parent listenerRoomActivity
+
+        super.passHandlerResult(recognizeResult, handler);
     }
 
     public void initRoomEtry(){

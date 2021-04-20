@@ -2,6 +2,8 @@ package com.example.myapplication.util.network;
 
 import android.util.Log;
 
+import com.tencent.iot.speech.app.DemoConfig;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -23,9 +25,7 @@ public class WebSocket {
 
         URI uri;
         try {
-            // Connect to local host
-            //uri = new URI("ws://192.168.1.124:8080/ws?userName="+userName+"&meetingId="+meetingId); // change to remote
-            uri = new URI("ws://35.215.150.91/ws?userName="+userName+"&meetingId="+meetingId); // change to remote
+            uri = new URI(DemoConfig.WS_PATH+"userName="+userName+"&meetingId="+meetingId); // change to remote
         }
         catch (URISyntaxException e) {
             e.printStackTrace();
@@ -35,7 +35,7 @@ public class WebSocket {
             @Override
             public void onOpen() {
                 Log.i("WebSocket", "Session is starting");
-                webSocketClient.send("Hello World!");
+                //webSocketClient.send(userName+" entered room "+meetingId);
             }
             @Override
             public void onTextReceived(String s) {
@@ -67,6 +67,11 @@ public class WebSocket {
         webSocketClient.setReadTimeout(60000);
         //webSocketClient.enableAutomaticReconnection(5000);
         webSocketClient.connect();
+    }
 
+    public void closeWebSocket(){
+        if (webSocketClient!=null) {
+            webSocketClient.close();
+        }
     }
 }

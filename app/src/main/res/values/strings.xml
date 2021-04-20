@@ -44,8 +44,11 @@
 
     <!--翻译语言方向设置选项-->
     <string-array name="language_direction">
-        <item>zh->en</item>
-        <item>en->zh</item>
+        <!-- choose input language for now -->
+        <item>zh</item>
+        <item>en</item>
+        <!--<item>zh->en</item>
+        <item>en->zh</item> -->
 
     </string-array>
 </resources>
