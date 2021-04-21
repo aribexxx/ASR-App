@@ -12,7 +12,10 @@ import com.example.myapplication.R;
 import com.example.myapplication.models.User;
 import com.example.myapplication.util.UserLocalStore;
 import com.example.myapplication.util.network.WebSocket;
+import com.example.myapplication.views.customview.subtitle.SubtitleView;
 import com.google.android.material.button.MaterialButton;
+
+import anylife.scrolltextview.ScrollTextView;
 
 // parent class for public and private listener room
 // get meetinglist from server and display all existing rooms
@@ -32,7 +35,9 @@ public class ListenerRoomActivity extends AppCompatActivity {
     protected TextView volume;
 
     // var used by ws and socketListImpl
-    protected EditText recognizeResult;
+    //protected EditText recognizeResult;
+    //protected SubtitleView recognizeResult;
+    protected ScrollTextView recognizeResult;
     protected WebSocket websocket;
     protected Handler handler;
 
@@ -43,7 +48,6 @@ public class ListenerRoomActivity extends AppCompatActivity {
 
         public void  onMessage(String s){
             System.out.println("this is implemented listener: "+s);
-
             handler.post(() -> recognizeResult.setText(s));
         }
     }
@@ -73,9 +77,17 @@ public class ListenerRoomActivity extends AppCompatActivity {
 
     public void passHandlerResult(EditText passedRecognizeResult, Handler passedHandler){
         handler = passedHandler;
+        //recognizeResult = passedRecognizeResult;
+    }
+//    public void passHandlerResult(SubtitleView passedRecognizeResult, Handler passedHandler){
+//        handler = passedHandler;
+//        recognizeResult = passedRecognizeResult;
+//    }
+
+    public void passHandlerResult(ScrollTextView passedRecognizeResult, Handler passedHandler){
+        handler = passedHandler;
         recognizeResult = passedRecognizeResult;
     }
-
     public void initView(){
     }
 
