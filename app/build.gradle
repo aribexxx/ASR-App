@@ -95,7 +95,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-android:1.7.25'
 
     implementation 'tech.gusavila92:java-android-websocket-client:1.2.2' //web socket client
-    implementation 'anylife.scrolltextview:ScrollTextviewLib:1.4.6'
+
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'

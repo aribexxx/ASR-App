@@ -12,15 +12,11 @@ import androidx.annotation.Nullable;
 import com.example.myapplication.R;
 import com.example.myapplication.asr.parentclass.ListenerRoomActivity;
 import com.example.myapplication.models.RoomEntry;
-import com.example.myapplication.views.customview.subtitle.SubtitleView;
-
-import anylife.scrolltextview.ScrollTextView;
 
 public class ListenerPublicRoomActivity extends ListenerRoomActivity {
     RoomEntry room;
-    //SubtitleView recognizeResult;
+    EditText recognizeResult;
     protected Handler handler;
-    ScrollTextView scrollText;
 
     public ListenerPublicRoomActivity() {
         this.room=new RoomEntry.Builder().build();
@@ -34,27 +30,28 @@ public class ListenerPublicRoomActivity extends ListenerRoomActivity {
 
     @Override
     public void initView(){
-        super.initView();
         setContentView(R.layout.mh_listener_publicroom_activity);
+
         // 初始化相应的控件
         //set UI components view
         leaveRoom = findViewById(R.id.leaveroom_button);
-        //recognizeResult = (SubtitleView) findViewById(R.id.recognize_result);
         //set leave room button click
         leaveRoom.setOnClickListener(v -> {
             super.closeWebSocket();
             finish();
         });
-         //set scrolltext
-        scrollText = findViewById(R.id.scrolltxt);
-        scrollText.setSpeed(4);
-        scrollText.setTextColor(0xffad43ae);
-        //recognizeResult.setSubtitle();
-        //recognizeResult.init();
+
+        start = (Button) findViewById(R.id.start);
+        stop = (Button) findViewById(R.id.stop);
+        cancel = (Button)findViewById(R.id.cancel);
+        recognizeState = (TextView) findViewById(R.id.recognize_state);
+        volume = (TextView) findViewById(R.id.volume);
+        recognizeResult = (EditText) findViewById(R.id.recognize_result);
         //recognizeResult.setText("This is aaaa listener public room");
         handler = new Handler(getMainLooper()); // used by parent listenerRoomActivity
+
         // pass the instance to parent listenerRoomActivity
-        super.passHandlerResult(scrollText, handler);
+        super.passHandlerResult(recognizeResult, handler);
     }
 
 
