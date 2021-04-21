@@ -21,8 +21,8 @@ public class ListenerPrivateRoomActivity extends ListenerRoomActivity {
     }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         initView();
+        super.onCreate(savedInstanceState);
     }
 
     @Override

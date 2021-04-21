@@ -684,7 +684,7 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
                 //todo: add close meeting logic
                 progressDialog.show();
                 callEndMeeting();
-                //finish();
+                //finish(); // move to after callEndMeeting is called
             }
         });
 
@@ -806,10 +806,11 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
                             });
                         } else if (state.equals("0")) { //get UID here
                             //need to update UI thread with a new thread,dont block UI thread
-                            String meetingId = extractData.getProperty("meetingId");
+                            //String meetingId = extractData.getProperty("meetingId");
                             runOnUiThread(
                                     () -> {
-                                        System.out.println("done");
+                                        //System.out.println("done");
+                                        websocket.closeWebSocket(); // close websocket
                                         finish();
                                     }
                             );
