@@ -18,7 +18,9 @@ public class DemoConfig {
 
 
     //google cloud server config
-    public final static String SERVER_PATH = "https://af914efa-f908-4eac-9a23-b84e6115908a.mock.pstmn.io";
+    //public final static String SERVER_PATH = "https://af914efa-f908-4eac-9a23-b84e6115908a.mock.pstmn.io";
+    public final static String SERVER_PATH = "http://35.215.150.91";
+    public final static String WS_PATH = "ws://35.215.150.91/ws?"; //192.168.1.124:8080/ws?
     public final static String ROUTE_LOGIN ="/login";
     public final static String ROUTE_SIGNUP ="/signup";
     public final static String ROUTE_STARTROOM ="/startMeeting";

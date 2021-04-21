@@ -43,6 +43,7 @@ public class RoomEntry implements RoomCardType {
      this.pwd =builder.password;
      this.roomDescription=builder.roomDescription;
      this.direct=builder.direct;
+     this.url=builder.url;
 
     }
     public void setPwd(String pwd) {

@@ -1,6 +1,8 @@
 package com.example.myapplication.asr.parentclass;
 
 import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,8 +22,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.myapplication.models.User;
+import com.example.myapplication.util.UserLocalStore;
 import com.example.myapplication.util.network.WebSocket;
+import com.example.myapplication.views.setuproom.SpeakerPrivateRoomActivity;
+import com.example.myapplication.views.setuproom.SpeakerPublicRoomActivity;
+import com.example.myapplication.views.setuproom.StartRoomFragment;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.gson.Gson;
 import com.tencent.aai.AAIClient;
 import com.tencent.aai.audio.data.AudioRecordDataSource;
 import com.tencent.aai.auth.AbsCredentialProvider;
@@ -46,9 +55,12 @@ import com.tencent.iot.speech.app.consts.Const;
 import com.tencent.iot.speech.app.utils.SharePreferenceUtil;
 import com.tencent.iot.speech.asr.listener.MessageListener;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -57,6 +69,17 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class SpeakerASRRoomActivity extends AppCompatActivity implements MessageListener {
 
@@ -89,6 +112,13 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
     private final String PERFORMANCE_TAG = "PerformanceTag";
 
     private boolean switchToDeviceAuth = false;
+
+    UserLocalStore userLocalStore;
+    private String engineModelType;
+    private String meetingId;
+    protected ProgressDialog progressDialog;
+
+    public  static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     private void checkPermissions() {
 
@@ -131,12 +161,38 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
 
         super.onCreate(savedInstanceState);
         initView();
+        // get meetingId from intent
+        Intent intent = getIntent();
+        meetingId = intent.getStringExtra("meetingId" );
+        String direct = intent.getStringExtra("direct" );
+
+        // get logged in userId
+        userLocalStore = new UserLocalStore(this);
+        User user = userLocalStore.getLoggedInUser();
+        String userId = user.getUserId();
+
+        // set engineModelType for asr according to setting
+        if (direct.equals("zh")) {
+            engineModelType = EngineModelType.EngineModelType16K.getType();
+        } else if (direct.equals("en")){
+            engineModelType = EngineModelType.EngineModelType16KEN.getType();
+        }
+
         // create ws connection
         websocket = new WebSocket(new SocketListImpl());
-        websocket.createWebSocketClient("1", "4"); // entering meeting room 4 as user 1
+        websocket.createWebSocketClient(userId, meetingId);
 
-        switchToDeviceAuth = SharePreferenceUtil.getBoolean(SpeakerASRRoomActivity.this,
-                Const.APP_CONFIG_FILE, Const.SWITCH_TO_DEVICE_AUTH);
+        // progressDialog
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Processing...");
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
+
+        switchToDeviceAuth = SharePreferenceUtil.getBoolean(
+                SpeakerASRRoomActivity.this,
+                Const.APP_CONFIG_FILE, Const.SWITCH_TO_DEVICE_AUTH
+        );
 
         // 检查sdk运行的必要条件权限
         checkPermissions();
@@ -194,7 +250,7 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
                 AAILogger.info(logger, "分片slice seq = {}, voiceid = {}, result = {}", seq, result.getVoiceId(), result.getText());
 
                 // only logs or sends to ws if sliceType is 2 (end of a sentence) or (sliceType is 1 (middle of sentence) and the text is different (updated))
-                if (result.getSliceType() == 2 || (result.getSliceType() == 1 &&   !result.getText().equals(resMap.get(String.valueOf(seq)))) ) {
+                if (result.getSliceType() == 2 || (result.getSliceType() == 1 && !result.getText().equals(resMap.get(String.valueOf(seq)))) ) {
                     //AAILogger.info(logger, "conditioned 分片slice text=" + result.getText() + " slice type:" + result.getSliceType());
                     websocket.webSocketClient.send(result.getText()); // send sliced text to ws
                 }
@@ -455,7 +511,7 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
 
         if (aaiClient==null) {
             try {
-//                        aaiClient = new AAIClient(MainActivity.this, appid, projectId, secretId, credentialProvider);
+                //aaiClient = new AAIClient(MainActivity.this, appid, projectId, secretId, credentialProvider);
                 //sdk crash 上传
                 if (switchToDeviceAuth) {
                     aaiClient = new AAIClient(SpeakerASRRoomActivity.this, Integer.valueOf(DemoConfig.appIdForDeviceAuth), projectId,
@@ -497,7 +553,7 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
 //                        .pcmAudioDataSource(new AudioRecordDataSource()) // 设置数据源
                         .pcmAudioDataSource(new AudioRecordDataSource(isSaveAudioRecordFiles)) // 设置数据源
                         //.templateName(templateName) // 设置模板
-                        .template(new AudioRecognizeTemplate(EngineModelType.EngineModelType16K.getType(),0,0)) // 设置自定义模板 this sets the input language
+                        .template(new AudioRecognizeTemplate(engineModelType,0,0)) // 设置自定义模板 this sets the input language
                         .setFilterDirty(0)  // 0 ：默认状态 不过滤脏话 1：过滤脏话
                         .setFilterModal(0) // 0 ：默认状态 不过滤语气词  1：过滤部分语气词 2:严格过滤
                         .setFilterPunc(0) // 0 ：默认状态 不过滤句末的句号 1：滤句末的句号
@@ -625,8 +681,10 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
         leaveRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-
+                //todo: add close meeting logic
+                progressDialog.show();
+                callEndMeeting();
+                //finish();
             }
         });
 
@@ -690,6 +748,76 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
                 }
             });
         }
+    }
+
+    private void callEndMeeting(){
+            new Thread(() -> {
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .connectTimeout(10, TimeUnit.SECONDS)
+                        .readTimeout(10, TimeUnit.SECONDS)
+                        .writeTimeout(10, TimeUnit.SECONDS)
+                        .build();
+
+                User user = userLocalStore.getLoggedInUser();
+                String userName = user.getUserName();
+
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("meetingId", meetingId);
+
+                } catch (Exception e) {
+                    System.out.println(e.toString());
+                }
+
+                RequestBody requestBody = RequestBody.create(JSON, jsonObject.toString());
+                Request request = new Request.Builder().post(requestBody)
+                        .url(DemoConfig.SERVER_PATH + DemoConfig.ROUTE_ENDROOM).build();
+                Call call = okHttpClient.newCall(request);
+                Context context  = this;
+
+                // this makes asynchronous call to server
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        progressDialog.dismiss();
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        //dismiss login loading bar
+                        progressDialog.dismiss();
+                        //handling json response, getting fields
+                        final String myresponse_json = response.body().string();
+                        Log.println(Log.DEBUG, "OUT_JSON", myresponse_json);
+                        Gson gson = new Gson();
+                        Properties extractData = gson.fromJson(myresponse_json, Properties.class);
+                        String state = extractData.getProperty("state");
+                        Log.println(Log.DEBUG, "LOG", state);
+
+                        // check response "state"
+                        if (state.equals("1")) {
+                            //need to update UI thread with a new thread,dont block UI thread
+                            String errorMessage = extractData.getProperty("errorMessage");
+                            runOnUiThread(() -> {
+                                MaterialAlertDialogBuilder dialogBuilder;
+                                dialogBuilder = new MaterialAlertDialogBuilder(context).setTitle(errorMessage);
+                                dialogBuilder.show();
+                            });
+                        } else if (state.equals("0")) { //get UID here
+                            //need to update UI thread with a new thread,dont block UI thread
+                            String meetingId = extractData.getProperty("meetingId");
+                            runOnUiThread(
+                                    () -> {
+                                        System.out.println("done");
+                                        finish();
+                                    }
+                            );
+                        }
+
+                    }
+                });
+            }).start();
     }
 
 }

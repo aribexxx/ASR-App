@@ -36,11 +36,9 @@ public class ListenerPublicRoomActivity extends ListenerRoomActivity {
         //set UI components view
         leaveRoom = findViewById(R.id.leaveroom_button);
         //set leave room button click
-        leaveRoom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
+        leaveRoom.setOnClickListener(v -> {
+            super.closeWebSocket();
+            finish();
         });
 
         start = (Button) findViewById(R.id.start);

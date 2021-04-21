@@ -1,5 +1,6 @@
 package com.example.myapplication.asr.parentclass;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Button;
@@ -8,6 +9,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.example.myapplication.R;
+import com.example.myapplication.models.User;
+import com.example.myapplication.util.UserLocalStore;
 import com.example.myapplication.util.network.WebSocket;
 import com.google.android.material.button.MaterialButton;
 
@@ -33,17 +36,15 @@ public class ListenerRoomActivity extends AppCompatActivity {
     protected WebSocket websocket;
     protected Handler handler;
 
+    private String meetingId;
+    UserLocalStore userLocalStore;
+
     public class SocketListImpl implements WebSocket.SocketListener {
 
         public void  onMessage(String s){
             System.out.println("this is implemented listener: "+s);
 
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    recognizeResult.setText(s);
-                }
-            });
+            handler.post(() -> recognizeResult.setText(s));
         }
     }
 
@@ -52,9 +53,22 @@ public class ListenerRoomActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //initView();
+
+        // get meetingId from intent
+        Intent intent = getIntent();
+        meetingId = intent.getStringExtra("meetingId" );
+
+        // get logged in userId
+        userLocalStore = new UserLocalStore(this);
+        User user = userLocalStore.getLoggedInUser();
+        String userId = user.getUserId();
+
         // create ws connection
         websocket = new WebSocket(new SocketListImpl());
-        websocket.createWebSocketClient("2", "4");
+        websocket.createWebSocketClient(userId, meetingId); // enter the meeting room
+    }
+    public void closeWebSocket(){
+        websocket.closeWebSocket();
     }
 
     public void passHandlerResult(EditText passedRecognizeResult, Handler passedHandler){
