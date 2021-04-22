@@ -68,6 +68,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -256,7 +257,13 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
                 // only logs or sends to ws if sliceType is 2 (end of a sentence) or (sliceType is 1 (middle of sentence) and the text is different (updated))
                 if (result.getSliceType() == 2 || (result.getSliceType() == 1 && !result.getText().equals(resMap.get(String.valueOf(seq)))) ) {
                     //AAILogger.info(logger, "conditioned 分片slice text=" + result.getText() + " slice type:" + result.getSliceType());
-                    websocket.webSocketClient.send(result.getText()); // send sliced text to ws
+                    Map<String, String> map = new HashMap<>();
+                    map.put("type", String.valueOf(result.getSliceType()));
+                    map.put("text", result.getText());
+                    Gson gson = new Gson();
+                    String json = gson.toJson(map);
+                    //websocket.webSocketClient.send(result.getText()); // send sliced text to ws
+                    websocket.webSocketClient.send(json); // send sliced text to ws
                 }
 
                 resMap.put(String.valueOf(seq), result.getText());

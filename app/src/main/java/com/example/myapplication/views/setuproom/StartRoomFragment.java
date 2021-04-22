@@ -121,12 +121,29 @@ public class StartRoomFragment extends BottomSheetDialogFragment {
         startMeetingProgressDialog.setCancelable(false);
         startMeetingProgressDialog.setIndeterminate(true);
 
-        for (int i=0; i<10; i++) {
-            Random random = new Random();
-            int ranit = random.nextInt(1100 - 1000) + 1000;
-            imageUrls.add("https://picsum.photos/id/"+String.valueOf(ranit)+"/200/300");
-        }
+        //for (int i=0; i<10; i++) {
+        //    Random random = new Random();
+        //    int ranit = random.nextInt(1100 - 1000) + 1000;
+        //    imageUrls.add("https://picsum.photos/id/"+String.valueOf(ranit)+"/200/300");
+        //}
 
+        List<String> imageIds = new ArrayList<>();
+        imageIds.add("0");
+        imageIds.add("1");
+        imageIds.add("10");
+        imageIds.add("1001");
+        imageIds.add("1000");
+        imageIds.add("100");
+        imageIds.add("1002");
+        imageIds.add("1003");
+        imageIds.add("1004");
+        imageIds.add("1005");
+        imageIds.add("1006");
+        imageIds.add("1008");
+        imageIds.add("1009");
+        for (String i : imageIds) {
+            imageUrls.add("https://picsum.photos/id/" + i + "/400/100");
+        }
 
         carouselView = view.findViewById(R.id.carouselView);
         carouselView.setPageCount(imageUrls.size());
