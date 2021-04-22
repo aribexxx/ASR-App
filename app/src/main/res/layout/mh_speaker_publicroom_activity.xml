@@ -77,8 +77,9 @@
         android:id="@+id/bottom_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_below="@+id/text_section">
+        android:layout_weight="2"
+        android:layout_below="@+id/text_section"
+        >
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/leaveroom_button"

@@ -33,7 +33,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.2"
         android:id="@+id/text_section"
         android:layout_below="@+id/app_bar">
 
@@ -44,7 +45,7 @@
             android:ellipsize="end"
             android:maxLines="12"
             android:inputType="textMultiLine"
-            android:text="This is a public Room"
+            android:text="This is a Public Room"
 
             />
 
@@ -52,8 +53,9 @@
 
     <RelativeLayout
         android:id="@+id/bottom_section"
-        android:layout_width="match_parent"
-        android:layout_height="177dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_below="@+id/text_section"
         android:layout_alignParentBottom="true">
 
