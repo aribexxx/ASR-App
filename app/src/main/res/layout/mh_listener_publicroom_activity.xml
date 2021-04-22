@@ -12,7 +12,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/return_bar_layout">
+        android:id="@+id/app_bar">
 
 <!--App menu bar -->
 <com.google.android.material.appbar.AppBarLayout
@@ -25,52 +25,46 @@
         style="@style/Widget.MockHouse.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_baseline_arrow_downward_24"
         app:title="Listener Public Room" />
 </com.google.android.material.appbar.AppBarLayout>
 
 </RelativeLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:id="@+id/public_room_section"
-      android:layout_below="@+id/return_bar_layout"
-      android:gravity="top">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:id="@+id/text_section"
+        android:layout_below="@+id/app_bar">
 
+        <EditText
+            android:id="@+id/recognize_result"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:maxLines="12"
+            android:inputType="textMultiLine"
+            android:text="This is a Public Room"
 
+            />
 
-      <EditText
-        android:id="@+id/recognize_result"
-        android:layout_width="wrap_content"
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="This is a listener Public Room"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
+        android:id="@+id/bottom_section"
+        android:layout_below="@+id/text_section"
+        android:layout_alignParentBottom="true">
 
       <com.google.android.material.button.MaterialButton
           android:id="@+id/leaveroom_button"
           style="@style/Widget.MockHouse.Button"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_below="@+id/recognize_result"
+
           android:text="Leave quietly"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintHorizontal_bias="0.177"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/recognize_result"
-          app:layout_constraintVertical_bias="0.878" />
+       />
 
 
-
-
-
-  </androidx.constraintlayout.widget.ConstraintLayout>
-
+    </RelativeLayout>
 
 </RelativeLayout>

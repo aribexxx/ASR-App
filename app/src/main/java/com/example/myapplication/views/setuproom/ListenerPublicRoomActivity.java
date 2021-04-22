@@ -2,10 +2,12 @@ package com.example.myapplication.views.setuproom;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import android.widget.Scroller;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 
@@ -41,12 +43,11 @@ public class ListenerPublicRoomActivity extends ListenerRoomActivity {
             finish();
         });
 
-        start = (Button) findViewById(R.id.start);
-        stop = (Button) findViewById(R.id.stop);
-        cancel = (Button)findViewById(R.id.cancel);
-        recognizeState = (TextView) findViewById(R.id.recognize_state);
-        volume = (TextView) findViewById(R.id.volume);
         recognizeResult = (EditText) findViewById(R.id.recognize_result);
+        recognizeResult.setFocusable(false);
+        recognizeResult.setScroller(new Scroller(getApplicationContext()));
+        recognizeResult.setVerticalScrollBarEnabled(true);
+        recognizeResult.setMovementMethod(new ScrollingMovementMethod());
         //recognizeResult.setText("This is aaaa listener public room");
         handler = new Handler(getMainLooper()); // used by parent listenerRoomActivity
 

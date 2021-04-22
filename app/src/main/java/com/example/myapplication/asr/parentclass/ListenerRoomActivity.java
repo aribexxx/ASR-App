@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,6 +82,7 @@ public class ListenerRoomActivity extends AppCompatActivity {
                 handler.post(() -> Toast.makeText(c, "speaker has left", Toast.LENGTH_SHORT).show());
             } else {
                 handler.post(() -> recognizeResult.setText(s));
+                handler.post(() -> recognizeResult.setSelection(recognizeResult.getText().length(), recognizeResult.getText().length()));
             }
         }
     }
@@ -127,6 +130,7 @@ public class ListenerRoomActivity extends AppCompatActivity {
     public void passHandlerResult(EditText passedRecognizeResult, Handler passedHandler){
         handler = passedHandler;
         recognizeResult = passedRecognizeResult;
+
     }
 
     public void initView(){

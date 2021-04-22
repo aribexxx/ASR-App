@@ -8,11 +8,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -262,6 +266,7 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
                     @Override
                     public void run() {
                         recognizeResult.setText(msg);
+                        recognizeResult.setSelection(recognizeResult.getText().length(), recognizeResult.getText().length());
                     }
                 });
 
@@ -285,6 +290,7 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
                     @Override
                     public void run() {
                         recognizeResult.setText(msg);
+                        recognizeResult.setSelection(recognizeResult.getText().length(), recognizeResult.getText().length());
                     }
                 });
             }
@@ -339,7 +345,7 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
             @Override
             public void onStartRecord(AudioRecognizeRequest request) {
                 currentRequestId = request.getRequestId();
-                //AAILogger.info(logger, "onStartRecord..");
+                AAILogger.info(logger, "onStartRecord..");
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -511,7 +517,7 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
 
         if (aaiClient==null) {
             try {
-                //aaiClient = new AAIClient(MainActivity.this, appid, projectId, secretId, credentialProvider);
+//                        aaiClient = new AAIClient(MainActivity.this, appid, projectId, secretId, credentialProvider);
                 //sdk crash 上传
                 if (switchToDeviceAuth) {
                     aaiClient = new AAIClient(SpeakerASRRoomActivity.this, Integer.valueOf(DemoConfig.appIdForDeviceAuth), projectId,
@@ -693,7 +699,14 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
         cancel = (Button)findViewById(R.id.cancel);
         recognizeState = (TextView) findViewById(R.id.recognize_state);
         volume = (TextView) findViewById(R.id.volume);
+        //add
         recognizeResult = (EditText) findViewById(R.id.recognize_result);
+        recognizeResult.setFocusable(false);
+        recognizeResult.setScroller(new Scroller(getApplicationContext()));
+        recognizeResult.setVerticalScrollBarEnabled(true);
+        recognizeResult.setMovementMethod(new ScrollingMovementMethod());
+
+
         handler = new Handler(getMainLooper());
     }
 
