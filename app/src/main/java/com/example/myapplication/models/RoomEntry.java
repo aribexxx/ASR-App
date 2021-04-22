@@ -30,6 +30,7 @@ public class RoomEntry implements RoomCardType {
     private String roomID;
     private String direct; //language setting (int (0: zh->en, 1: en->zh, ……) (*required)
     private String pwd;// private roon require, public can set to null
+    private String status;
     /**
      * 可选属性
      */
@@ -44,6 +45,7 @@ public class RoomEntry implements RoomCardType {
      this.roomDescription=builder.roomDescription;
      this.direct=builder.direct;
      this.url=builder.url;
+     this.status=builder.status;
 
     }
     public void setPwd(String pwd) {
@@ -64,6 +66,7 @@ public class RoomEntry implements RoomCardType {
         return roomID;
     }
 
+
     public String getRoomDescription() {
         return roomDescription;
     }
@@ -76,6 +79,9 @@ public class RoomEntry implements RoomCardType {
         return url;
     }
 
+    public String getStatus() {
+        return status;
+    }
     /**
      * Loads a raw JSON at R.raw and converts it into a list of RoomEntry objects
      */
@@ -127,6 +133,7 @@ public class RoomEntry implements RoomCardType {
         private String direct;
         private String password;// private roon require, public can set to null
         private String url;
+        private String status;
 
         public Builder() {
             roomTitle = "Default Titile";
@@ -167,6 +174,11 @@ public class RoomEntry implements RoomCardType {
         }
         public Builder url(String url) {
             this.url = url;
+            return this;
+        }
+
+        public Builder status(String status) {
+            this.status = status;
             return this;
         }
         /**

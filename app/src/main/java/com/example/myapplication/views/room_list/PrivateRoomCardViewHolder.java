@@ -48,6 +48,7 @@ public class PrivateRoomCardViewHolder extends RecyclerView.ViewHolder {
     public NetworkImageView roomImage;
     public TextView roomTitle;
     public TextView speaker_name;
+    public TextView roomStatus;
     private ImageRequester imageRequester;
     public TextView roomId;
     private EditText input_password;
@@ -63,6 +64,7 @@ public class PrivateRoomCardViewHolder extends RecyclerView.ViewHolder {
         roomTitle = itemView.findViewById(R.id.room_title);
         speaker_name = itemView.findViewById(R.id.speaker_name);
         roomId = itemView.findViewById(R.id.room_id);
+        roomStatus = itemView.findViewById(R.id.room_status);
 
         imageRequester = ImageRequester.getInstance();
 
@@ -86,6 +88,7 @@ public class PrivateRoomCardViewHolder extends RecyclerView.ViewHolder {
         speaker_name.setText(((RoomEntry)item).getSpeakerName());
         imageRequester.setImageFromUrl(roomImage,((RoomEntry)item).getUrl());
         roomId.setText(((RoomEntry)item).getRoomID());
+        roomStatus.setText(((RoomEntry)item).getStatus());
     }
 
     private void callJoinMeeting(Context context) {
@@ -156,8 +159,10 @@ public class PrivateRoomCardViewHolder extends RecyclerView.ViewHolder {
                                 public void run() {
                                     // password and meeting correct redirect to meeting room
                                     String meetingId = roomId.getText().toString();
+                                    String meetingStatus = roomStatus.getText().toString();
                                     Intent go_asr_activity=new Intent(context, ListenerPrivateRoomActivity.class);
                                     go_asr_activity.putExtra("meetingId", meetingId);
+                                    go_asr_activity.putExtra("meetingStatus", meetingStatus);
                                     context.startActivity(go_asr_activity);
                                 }
                             });

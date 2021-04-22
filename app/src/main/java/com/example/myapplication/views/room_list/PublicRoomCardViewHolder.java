@@ -18,6 +18,7 @@ public class PublicRoomCardViewHolder extends RecyclerView.ViewHolder {
     public NetworkImageView roomImage;
     public TextView roomTitle;
     public TextView speaker_name;
+    public TextView roomStatus;
     private ImageRequester imageRequester;
     public TextView roomId;
 
@@ -29,14 +30,17 @@ public class PublicRoomCardViewHolder extends RecyclerView.ViewHolder {
         speaker_name = itemView.findViewById(R.id.speaker_name);
         imageRequester = ImageRequester.getInstance();
         roomId = itemView.findViewById(R.id.room_id);
+        roomStatus = itemView.findViewById(R.id.room_status);
 
         roomImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {// 点击图片，听众打开public房间
                 Context context=v.getContext();
                 String meetingId = roomId.getText().toString();
+                String meetingStatus = roomStatus.getText().toString();
                 Intent go_asr_activity=new Intent(context, ListenerPublicRoomActivity.class);
                 go_asr_activity.putExtra("meetingId", meetingId);
+                go_asr_activity.putExtra("meetingStatus", meetingStatus);
                 context.startActivity(go_asr_activity);
 
             }
@@ -49,6 +53,7 @@ public class PublicRoomCardViewHolder extends RecyclerView.ViewHolder {
         speaker_name.setText(((RoomEntry)item).getSpeakerName());
         imageRequester.setImageFromUrl(roomImage,((RoomEntry)item).getUrl());
         roomId.setText(((RoomEntry)item).getRoomID());
+        roomStatus.setText(((RoomEntry)item).getStatus());
     }
 
 

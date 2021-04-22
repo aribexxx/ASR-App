@@ -2,9 +2,11 @@ package com.example.myapplication.views.setuproom;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Scroller;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -21,8 +23,8 @@ public class ListenerPrivateRoomActivity extends ListenerRoomActivity {
     }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         initView();
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -45,6 +47,10 @@ public class ListenerPrivateRoomActivity extends ListenerRoomActivity {
         volume = (TextView) findViewById(R.id.volume);
         recognizeResult = (EditText) findViewById(R.id.recognize_result);
         //recognizeResult.setText("This is aaaa listener 私密 room");
+        recognizeResult.setFocusable(false);
+        recognizeResult.setScroller(new Scroller(getApplicationContext()));
+        recognizeResult.setVerticalScrollBarEnabled(true);
+        recognizeResult.setMovementMethod(new ScrollingMovementMethod());
 
         handler = new Handler(getMainLooper()); // used by parent listenerRoomActivity
 

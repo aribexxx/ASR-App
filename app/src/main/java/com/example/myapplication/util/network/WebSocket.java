@@ -39,6 +39,7 @@ public class WebSocket {
             }
             @Override
             public void onTextReceived(String s) {
+                // todo: not sure why sometimes not invoked after the listener first join the meeting
                 //Log.i("WebSocket", "Message received");
                 //final String message = s;
                 Log.i("WebSocket", "Message received" + s);
@@ -55,6 +56,8 @@ public class WebSocket {
             }
             @Override
             public void onException(Exception e) {
+
+                System.out.println("socket exception");
                 System.out.println(e.getMessage());
             }
             @Override

@@ -23,6 +23,12 @@ public class MeetingListRes {
         private String direct;
         private String imageUrl;
 
+        public String getStatus() {
+            return status;
+        }
+
+        private String status;
+
         public String getPwd() {
             return pwd;
         }

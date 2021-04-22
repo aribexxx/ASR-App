@@ -25,6 +25,7 @@ public class DemoConfig {
     public final static String ROUTE_SIGNUP ="/signup";
     public final static String ROUTE_STARTROOM ="/startMeeting";
     public final static String ROUTE_SHOWROOM ="/meetingList";
+    public final static String ROUTE_SHOWROOMRECORD ="/meetingRecord?meetingId=";
     public final static String ROUTE_ENDROOM ="/endMeeting";
     public final static String ROUTE_JOINROOM ="/joinMeeting";
 }
