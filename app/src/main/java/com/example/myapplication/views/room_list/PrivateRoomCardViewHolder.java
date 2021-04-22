@@ -146,7 +146,8 @@ public class PrivateRoomCardViewHolder extends RecyclerView.ViewHolder {
                                 public void run() {
                                     MaterialAlertDialogBuilder dialogBuilder;
                                     dialogBuilder = new MaterialAlertDialogBuilder(context).setTitle(errorMessage);
-                                    dialogBuilder.show();
+
+                                    dialogBuilder.setPositiveButton("Ok", null).show();
                                 }
                             });
                         } else if (state.equals("0")) { //get UID here
