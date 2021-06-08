@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -26,12 +24,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.myapplication.models.TranslationResponse;
 import com.example.myapplication.models.User;
 import com.example.myapplication.util.UserLocalStore;
+import com.example.myapplication.util.network.ResponseHandler;
 import com.example.myapplication.util.network.WebSocket;
-import com.example.myapplication.views.setuproom.SpeakerPrivateRoomActivity;
-import com.example.myapplication.views.setuproom.SpeakerPublicRoomActivity;
-import com.example.myapplication.views.setuproom.StartRoomFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
@@ -74,7 +71,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -260,6 +256,7 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
                     Map<String, String> map = new HashMap<>();
                     map.put("type", String.valueOf(result.getSliceType()));
                     map.put("text", result.getText());
+                    map.put("seq", String.valueOf(seq));
                     Gson gson = new Gson();
                     String json = gson.toJson(map);
                     //websocket.webSocketClient.send(result.getText()); // send sliced text to ws
@@ -758,13 +755,14 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
     // ws socketList implementation this is where we pass the callbacks to ws instance
     public class SocketListImpl implements WebSocket.SocketListener {
 
-        public void  onMessage(String s){
-            System.out.println("this is implemented:"+s);
-
+        public void  onMessage(String response){
+            System.out.println("this is implemented in:"+this.toString()+":"+response);
+            TranslationResponse resObj=ResponseHandler.decodeJsonResponse(response);
+            System.out.println(String.format("Response: seq = %s ,src = %s , transRes = %s ",resObj.getSeq(),resObj.getSrc(),resObj.getTranRes()));
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    recognizeResult.setText(s);
+                    recognizeResult.setText(response);
                 }
             });
         }
