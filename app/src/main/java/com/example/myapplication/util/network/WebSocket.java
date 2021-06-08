@@ -38,11 +38,12 @@ public class WebSocket {
                 //webSocketClient.send(userName+" entered room "+meetingId);
             }
             @Override
-            public void onTextReceived(String s) {
+            public void onTextReceived(String response) {
+                // todo: not sure why sometimes not invoked after the listener first join the meeting
                 //Log.i("WebSocket", "Message received");
                 //final String message = s;
-                Log.i("WebSocket", "Message received" + s);
-                listener.onMessage(s);
+                Log.i("WebSocket", "Message received" + response);
+                listener.onMessage(response);
             }
             @Override
             public void onBinaryReceived(byte[] data) {
@@ -55,6 +56,8 @@ public class WebSocket {
             }
             @Override
             public void onException(Exception e) {
+
+                System.out.println("socket exception");
                 System.out.println(e.getMessage());
             }
             @Override

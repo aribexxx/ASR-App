@@ -1,4 +1,5 @@
 package com.example.myapplication.views.room_list;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -54,6 +55,15 @@ SwipeRefreshLayout my_swipe_refresh;
 List<RoomEntry> roomlist;
 RoomCardRecyclerViewAdapter adapter;
 RecyclerView recyclerView;
+
+    // todo: auto refresh meetingList when come back to this page
+    //@Override
+    //public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    //    super.onActivityResult(requestCode, resultCode, data);
+
+    //    initRoomEntryList_OnServer();
+    //}
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -210,6 +220,7 @@ RecyclerView recyclerView;
                         builder.roomDescription(meeting.getRoomDescription());
                         builder.direct(meeting.getDirect());
                         builder.url(meeting.getImageUrl());
+                        builder.status(meeting.getStatus());
                         RoomEntry roomEntry = new RoomEntry(builder);
                         room_list.add(roomEntry);
                     }
