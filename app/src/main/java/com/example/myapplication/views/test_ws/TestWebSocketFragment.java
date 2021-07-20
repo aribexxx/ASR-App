@@ -18,7 +18,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 
 import com.example.myapplication.R;
-import com.example.myapplication.util.network.WebSocket;
+import com.example.myapplication.control.network.WebSocket;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -94,6 +94,7 @@ public class TestWebSocketFragment extends Fragment implements NavController.OnD
             @Override
             public void onClick(View view) {
                 websocket = new WebSocket(new SocketListImpl());
+                //for testing default use mode 1
                 websocket.createWebSocketClient("1", "4");
                 sendButton.setVisibility(View.VISIBLE);
                 textInputEditText.setVisibility(View.VISIBLE);

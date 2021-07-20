@@ -29,6 +29,7 @@ public class RoomEntry implements RoomCardType {
     private String roomDescription;
     private String roomID;
     private String direct; //language setting (int (0: zh->en, 1: en->zh, ……) (*required)
+    private String modelType="1";
     private String pwd;// private roon require, public can set to null
     private String status;
     /**
@@ -46,7 +47,6 @@ public class RoomEntry implements RoomCardType {
      this.direct=builder.direct;
      this.url=builder.url;
      this.status=builder.status;
-
     }
     public void setPwd(String pwd) {
         this.pwd = pwd;
@@ -57,7 +57,12 @@ public class RoomEntry implements RoomCardType {
     public String getRoomTitle() {
         return roomTitle;
     }
-
+    public String getModelType() {
+        return modelType;
+    }
+    public void setModelType(String modelType) {
+        this.modelType = modelType;
+    }
     public String getSpeakerName() {
         return userName;
     }

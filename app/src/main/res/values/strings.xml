@@ -49,6 +49,17 @@
         <item>en</item>
         <!--<item>zh->en</item>
         <item>en->zh</item> -->
+    </string-array>
 
+    <!--翻译语言方向设置选项-->
+    <string-array name="model_type">
+        <!-- choose input language for now -->
+        <item>demo模型</item>
+        <item>mma-h</item>
+        <item>mma-il</item>
+        <item>wait-k</item>
+        <item>full-sent</item>
+        <!--<item>zh->en</item>
+        <item>en->zh</item> -->
     </string-array>
 </resources>

@@ -4,7 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.myapplication.util.network.ImageRequester;
+import com.example.myapplication.control.network.ImageRequester;
 import com.example.myapplication.models.RoomEntry;
 import com.example.myapplication.R;
 

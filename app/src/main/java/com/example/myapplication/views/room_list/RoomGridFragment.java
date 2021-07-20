@@ -1,4 +1,5 @@
 package com.example.myapplication.views.room_list;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,15 +47,15 @@ import okhttp3.Response;
 
 //This is a GridView that display all the room cards + start room button
 
-public class RoomGridFragment extends Fragment implements NavController.OnDestinationChangedListener{
+public class RoomGridFragment extends Fragment implements NavController.OnDestinationChangedListener {
 
-
-ExtendedFloatingActionButton fab;
-StartRoomFragment startroom_frag;
-SwipeRefreshLayout my_swipe_refresh;
-List<RoomEntry> roomlist;
-RoomCardRecyclerViewAdapter adapter;
-RecyclerView recyclerView;
+    private static final String TAG = "RoomGridFragment";
+    ExtendedFloatingActionButton fab;
+    StartRoomFragment startroom_frag;
+    SwipeRefreshLayout my_swipe_refresh;
+    List<RoomEntry> roomlist;
+    RoomCardRecyclerViewAdapter adapter;
+    RecyclerView recyclerView;
 
     // todo: auto refresh meetingList when come back to this page
     //@Override
@@ -69,12 +70,12 @@ RecyclerView recyclerView;
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment with the ProductGrid theme
         View view = inflater.inflate(R.layout.room_grid_fragment, container, false);
-
 
 
         // Set up the toolbar
@@ -85,7 +86,7 @@ RecyclerView recyclerView;
         init_SwipeRefreshLayout(view);
 
         //init bottom sheet
-        startroom_frag=new StartRoomFragment();
+        startroom_frag = new StartRoomFragment();
 
         //init Fab
         initFab(view);
@@ -128,25 +129,24 @@ RecyclerView recyclerView;
 
     }
 
-    public void initFab(View view){
+    public void initFab(View view) {
         //initiate a fab
-         fab = (ExtendedFloatingActionButton) view.findViewById(R.id.extended_fab);
+        fab = (ExtendedFloatingActionButton) view.findViewById(R.id.extended_fab);
         fab.setShowMotionSpecResource(R.animator.fab_show);
         fab.setHideMotionSpecResource(R.animator.fab_hide);
-        fab.setOnClickListener(new View.OnClickListener(){
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 //((NavigationHost) getActivity()).navigateTo(new StartRoomFragment(), false); // Navigate to the next Fragment
-                  startroom_frag.show(getFragmentManager(),startroom_frag.getTag());
+                startroom_frag.show(getFragmentManager(), startroom_frag.getTag());
             }
 
         });
     }
 
 
-
-    public void init_SwipeRefreshLayout(View view){
-        my_swipe_refresh=view.findViewById(R.id.swipe_refresh);
+    public void init_SwipeRefreshLayout(View view) {
+        my_swipe_refresh = view.findViewById(R.id.swipe_refresh);
         my_swipe_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -155,7 +155,7 @@ RecyclerView recyclerView;
                 initRoomEntryList_OnServer();
                 // This method performs the actual data-refresh operation.
                 // The method calls setRefreshing(false) when it's finished.
-               //swap items
+                //swap items
                 //new Handler(getActivity().getMainLooper()).post(new Runnable() {
                 //    public void run() {
                 //        initRoomEntryList_OnServer();
@@ -174,26 +174,25 @@ RecyclerView recyclerView;
     }
 
 
-
     /**
      * Loads server responds and converts it into a list of RoomEntry objects
-     *
+     * <p>
      * Call http request
      * 4. GET /meetingList
      */
     //public  List<RoomEntry> initRoomEntryList_OnServer(){
-    public  void initRoomEntryList_OnServer(){
+    public void initRoomEntryList_OnServer() {
         List<RoomEntry> room_list = new ArrayList<>();
-        new Thread(()->{
+        new Thread(() -> {
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .connectTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(10,TimeUnit.SECONDS)
+                    .readTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.SECONDS)
                     .build();
 
             // FormBody formBody=new FormBody.Builder().build();
-            Request request=new Request.Builder().get().url(DemoConfig.SERVER_PATH +DemoConfig.ROUTE_SHOWROOM).build();
-            Call call= okHttpClient.newCall(request);
+            Request request = new Request.Builder().get().url(DemoConfig.SERVER_PATH + DemoConfig.ROUTE_SHOWROOM).build();
+            Call call = okHttpClient.newCall(request);
 
             // this makes asynchronous call to server
             call.enqueue(new Callback() {
@@ -206,33 +205,30 @@ RecyclerView recyclerView;
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
 
                     //handling json response, getting a list of existing rooms info
-                    final String myresponse_json=response.body().string();
+                    final String myresponse_json = response.body().string();
+                    Log.d(TAG, myresponse_json);
                     Gson gson = new Gson();
-                    MeetingListRes data = gson.fromJson(myresponse_json,MeetingListRes.class);
-                    String state=data.getState();
-                    List<MeetingListRes.Meeting> all_rooms=data.getMeeting();
-                    for (MeetingListRes.Meeting meeting : all_rooms){
+                    MeetingListRes data = gson.fromJson(myresponse_json, MeetingListRes.class);
+                    String state = data.getState();
+                    List<MeetingListRes.Meeting> all_rooms = data.getMeeting();
+                    for (MeetingListRes.Meeting meeting : all_rooms) {
+                        Log.d(TAG, meeting.getPwd()+"of Room "+meeting.getMeetingId());
                         RoomEntry.Builder builder = new RoomEntry.Builder();
-                        builder.roomID(meeting.getMeetingId());
-                        builder.password(meeting.getPwd());
-                        builder.speakerName(meeting.getUserName());
-                        builder.roomTitle(meeting.getRoomTitle());
-                        builder.roomDescription(meeting.getRoomDescription());
-                        builder.direct(meeting.getDirect());
-                        builder.url(meeting.getImageUrl());
-                        builder.status(meeting.getStatus());
+                        builder.roomID(meeting.getMeetingId())
+                                .password(meeting.getPwd()).speakerName(meeting.getUserName()).roomTitle(meeting.getRoomTitle()).roomDescription(meeting.getRoomDescription()).direct(meeting.getDirect())
+                                .url(meeting.getImageUrl()).status(meeting.getStatus());
                         RoomEntry roomEntry = new RoomEntry(builder);
                         room_list.add(roomEntry);
                     }
 
                     // check response "state"
-                    if(state.equals("0")){
+                    if (state.equals("0")) {
                         //need to update UI thread with a new thread,dont block UI thread
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
 
-                                if (adapter==null) {
+                                if (adapter == null) {
                                     adapter = new RoomCardRecyclerViewAdapter(getActivity(), roomlist);
                                 }
 
@@ -241,7 +237,7 @@ RecyclerView recyclerView;
                                 adapter.notifyDataSetChanged();
                                 recyclerView.setAdapter(adapter);
                                 Log.i("RF", "finish");
-                                if (my_swipe_refresh != null ) {
+                                if (my_swipe_refresh != null) {
                                     if (my_swipe_refresh.isRefreshing()) {
                                         my_swipe_refresh.setRefreshing(false);
                                     }
@@ -249,27 +245,26 @@ RecyclerView recyclerView;
                             }
 
                         });
-                    }
-                    else if(state.equals("1")){
+                    } else if (state.equals("1")) {
                         //need to update UI thread with a new thread,dont block UI thread
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 MaterialAlertDialogBuilder dialog_builder;
-                                dialog_builder=new MaterialAlertDialogBuilder(getActivity()).setTitle("Fail to get room list from server");
+                                dialog_builder = new MaterialAlertDialogBuilder(getActivity()).setTitle("Fail to get room list from server");
                                 dialog_builder.show();
-                           
+
                             }
                         });
                     }
-                    
+
                 }
             });
 
 
         }).start();
 
-      //return room_list;
+        //return room_list;
 
     }
 

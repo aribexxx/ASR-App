@@ -1,4 +1,4 @@
-package com.example.myapplication.util.network;
+package com.example.myapplication.control.network;
 
 import android.content.Context;
 import android.graphics.Bitmap;

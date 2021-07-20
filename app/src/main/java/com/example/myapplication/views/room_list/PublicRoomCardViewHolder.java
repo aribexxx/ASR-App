@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.example.myapplication.R;
 import com.example.myapplication.models.RoomEntry;
-import com.example.myapplication.util.network.ImageRequester;
+import com.example.myapplication.control.network.ImageRequester;
 import com.example.myapplication.views.setuproom.ListenerPublicRoomActivity;
 
 public class PublicRoomCardViewHolder extends RecyclerView.ViewHolder {
@@ -24,7 +24,7 @@ public class PublicRoomCardViewHolder extends RecyclerView.ViewHolder {
 
     public PublicRoomCardViewHolder(@NonNull View itemView) {
         super(itemView);
-        //TODO: Find and store views from itemView
+        // Find and store views from itemView
         roomImage = itemView.findViewById(R.id.room_theme_image);
         roomTitle = itemView.findViewById(R.id.room_title);
         speaker_name = itemView.findViewById(R.id.speaker_name);

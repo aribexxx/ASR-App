@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,12 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.example.myapplication.R;
 import com.example.myapplication.models.RoomEntry;
-import com.example.myapplication.models.User;
-import com.example.myapplication.util.network.ImageRequester;
+import com.example.myapplication.control.network.ImageRequester;
 import com.example.myapplication.views.setuproom.ListenerPrivateRoomActivity;
-import com.example.myapplication.views.setuproom.SpeakerPrivateRoomActivity;
-import com.example.myapplication.views.setuproom.SpeakerPublicRoomActivity;
-import com.example.myapplication.views.setuproom.StartRoomFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 import com.tencent.iot.speech.app.DemoConfig;
@@ -32,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -59,7 +53,7 @@ public class PrivateRoomCardViewHolder extends RecyclerView.ViewHolder {
 
     public PrivateRoomCardViewHolder(@NonNull View itemView) {
         super(itemView);
-        //TODO: Find and store views from itemView
+        // Find and store views from itemView
         roomImage = itemView.findViewById(R.id.room_theme_image);
         roomTitle = itemView.findViewById(R.id.room_title);
         speaker_name = itemView.findViewById(R.id.speaker_name);
@@ -72,9 +66,8 @@ public class PrivateRoomCardViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {// 点击图片，听众打开私密房间
                 // todo: all call join meeting api
-
                 Context context=v.getContext();
-                promptPasswordSetting(context);
+                promptPasswordInput(context);
 
             }
         });
@@ -175,7 +168,7 @@ public class PrivateRoomCardViewHolder extends RecyclerView.ViewHolder {
             }).start();
         }
 
-    public void promptPasswordSetting(Context context) {
+    public void promptPasswordInput(Context context) {
         MaterialAlertDialogBuilder dialog_builder;
         dialog_builder = new MaterialAlertDialogBuilder(context).setTitle("Input Your Password for the private Room");
 

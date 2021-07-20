@@ -3,7 +3,7 @@ package com.example.myapplication.views.setuproom;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Scroller;
@@ -12,15 +12,12 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.example.myapplication.R;
-import com.example.myapplication.asr.parentclass.ListenerRoomActivity;
+import com.example.myapplication.views.parentclass.ListenerRoomActivity;
 import com.example.myapplication.models.RoomEntry;
 
 public class ListenerPrivateRoomActivity extends ListenerRoomActivity {
     RoomEntry room;
     EditText recognizeResult;
-    public ListenerPrivateRoomActivity(){
-
-    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         initView();
@@ -57,15 +54,13 @@ public class ListenerPrivateRoomActivity extends ListenerRoomActivity {
         super.passHandlerResult(recognizeResult, handler);
     }
 
-    public void initRoomEtry(){
-        this.room=new RoomEntry.Builder().build();
+
+    public void setModelType(String modelType) {
+        if(room!=null){
+            room.setModelType(modelType);}
+        else{
+            Log.d("LPrivateRoomActivity","room is not initiated");
+        }
     }
 
-    public RoomEntry getRoomEtry(){
-           return  room;
-    }
-
-    public void setPasswordPrivateRoom(String password){
-        this.room.setPwd(password);
-    }
 }

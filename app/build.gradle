@@ -88,6 +88,7 @@ dependencies {
       //implementation(name: 'aai-release', ext: 'aar')//依赖构建后的aar
   //  implementation 'com.tencent.aai:aai:2.1.6@aar'
 
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
     implementation 'com.squareup.okhttp3:okhttp:4.0.0-RC1'
     implementation 'com.squareup.okio:okio:1.11.0'
     implementation 'com.google.code.gson:gson:2.8.5'

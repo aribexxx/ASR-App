@@ -28,7 +28,7 @@
             android:id="@+id/room_title_setting_text"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="Add a room title"
+            android:text="Room Title"
             android:textColor="@color/textColorPrimary">
 
         </TextView>
@@ -38,7 +38,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/room_title_setting"
-            android:text="Add a room description"
+            android:text="Room Description"
             android:textColor="@color/textColorPrimary">
 
         </TextView>
@@ -54,7 +54,7 @@
         <EditText
             android:id="@+id/room_description_setting"
             android:layout_width="800px"
-            android:layout_height="300px"
+            android:layout_height="250px"
             android:layout_below="@+id/room_title_setting"
             android:layout_marginLeft="100dp"
             android:hint="What are you planning to talk ?"
@@ -65,7 +65,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/room_description_setting"
-            android:text="Language setting"
+            android:text="Language"
             android:textColor="@color/textColorPrimary">
 
         </TextView>
@@ -77,6 +77,23 @@
             android:layout_below="@id/room_description_setting"
             android:layout_toRightOf="@+id/language_setting_text" />
 
+        <TextView
+            android:id="@+id/model"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/language_setting_spinner"
+            android:text="Model"
+            android:textColor="@color/textColorPrimary">
+        </TextView>
+
+        <Spinner
+            android:id="@+id/model_spinner"
+            android:layout_width="400px"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/language_setting_spinner"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="2dp"
+            android:layout_toRightOf="@+id/language_setting_text" />
     </RelativeLayout>
 
 

@@ -1,0 +1,60 @@
+@startuml
+class com.example.myapplication.views.setuproom.ListenerPrivateRoomActivity {
+~ RoomEntry room
+~ EditText recognizeResult
++ void onCreate(Bundle)
++ void initView()
++ void initRoomEtry()
++ RoomEntry getRoomEtry()
++ void setPasswordPrivateRoom(String)
+}
+class com.example.myapplication.views.setuproom.SpeakerPrivateRoomActivity {
+~ RoomEntry room
++ void onCreate(Bundle)
++ void initRoomEtry(String,String)
++ RoomEntry getRoomEtry()
++ void setPasswordPrivateRoom(String)
+}
+class com.example.myapplication.views.setuproom.SpeakerPublicRoomActivity {
+~ RoomEntry room
+~ EditText recognizeResult
++ void onCreate(Bundle)
++ void initRoomEtry(String,String)
+}
+class com.example.myapplication.views.setuproom.StartRoomFragment {
+~ ImageButton public_room
+~ ImageButton private_room
+~ MaterialButton letgo
+~ TextView roomTitleInput
+~ TextView roomDescriptionInput
+~ SpeakerPublicRoomActivity a_pub_room
+~ SpeakerPrivateRoomActivity a_private_room
+~ CarouselView carouselView
+~ List<String> imageUrls
+~ UserLocalStore userLocalStore
+~ ProgressDialog startMeetingProgressDialog
+~ EditText input_password
+~ Spinner spinner
+~ RoomType selectedRoom
++ {static} MediaType JSON
+~ ImageListener imageListener
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void promptPasswordSetting()
++ void callStartMeeting()
+}
+class com.example.myapplication.views.setuproom.ListenerPublicRoomActivity {
+~ RoomEntry room
+~ EditText recognizeResult
+# Handler handler
++ void onCreate(Bundle)
++ void initView()
+}
+
+
+com.example.myapplication.views.parentclass.ListenerRoomActivity <|-- com.example.myapplication.views.setuproom.ListenerPrivateRoomActivity
+com.example.myapplication.views.parentclass.SpeakerASRRoomActivity <|-- com.example.myapplication.views.setuproom.SpeakerPrivateRoomActivity
+com.example.myapplication.views.parentclass.SpeakerASRRoomActivity <|-- com.example.myapplication.views.setuproom.SpeakerPublicRoomActivity
+com.google.android.material.bottomsheet.BottomSheetDialogFragment <|-- com.example.myapplication.views.setuproom.StartRoomFragment
+com.example.myapplication.views.parentclass.ListenerRoomActivity <|-- com.example.myapplication.views.setuproom.ListenerPublicRoomActivity
+@enduml

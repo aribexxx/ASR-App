@@ -23,30 +23,30 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.myapplication.R;
+import com.example.myapplication.models.RoomEntry;
 import com.example.myapplication.models.User;
-import com.example.myapplication.util.UserLocalStore;
-import com.example.myapplication.views.nav.NavigationHost;
-import com.example.myapplication.views.room_list.RoomGridFragment;
+import com.example.myapplication.control.UserLocalStore;
+import com.example.myapplication.views.parentclass.SpeakerASRRoomActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
-import com.synnapps.carouselview.ViewListener;
+import com.tencent.aai.log.AAILogger;
 import com.tencent.iot.speech.app.DemoConfig;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -64,11 +64,13 @@ import okhttp3.Response;
 // 2.pub/ priv
 // 3. input room info
 public class StartRoomFragment extends BottomSheetDialogFragment {
+    private static final Logger logger = LoggerFactory.getLogger(StartRoomFragment.class);
     ImageButton public_room;
     ImageButton private_room;
     MaterialButton letgo;
     TextView roomTitleInput;
     TextView roomDescriptionInput;
+
     SpeakerPublicRoomActivity a_pub_room;
     SpeakerPrivateRoomActivity a_private_room;
     CarouselView carouselView;
@@ -80,7 +82,8 @@ public class StartRoomFragment extends BottomSheetDialogFragment {
     ProgressDialog startMeetingProgressDialog;
 
     EditText input_password;
-    Spinner spinner;
+    Spinner lang_spinner;
+    Spinner model_spinner;
 
 
     enum RoomType {
@@ -161,17 +164,25 @@ public class StartRoomFragment extends BottomSheetDialogFragment {
         });
 
         //set language direction spinner-------------
-        spinner = (Spinner) view.findViewById(R.id.language_setting_spinner);
+        lang_spinner = (Spinner) view.findViewById(R.id.language_setting_spinner);
+        model_spinner=(Spinner) view.findViewById(R.id.model_spinner);
+
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 getContext(),
                 R.array.language_direction, android.R.layout.simple_spinner_item
         );
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> model_adapter = ArrayAdapter.createFromResource(
+                getContext(),
+                R.array.model_type, android.R.layout.simple_spinner_item
+        );
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-
+        lang_spinner.setAdapter(adapter);
+        model_spinner.setAdapter(model_adapter);
         // public room button--------------
         public_room.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,7 +203,6 @@ public class StartRoomFragment extends BottomSheetDialogFragment {
                 letgo.setText("Start Private Room");
                 letgo.setVisibility(View.VISIBLE); // set letgo to visible
                 selectedRoom = RoomType.PRIVATE_ROOM;
-                Log.println(Log.DEBUG, "ROOM", "PRIVATEEEE");
                 promptPasswordSetting();
         }
         });
@@ -212,9 +222,9 @@ public class StartRoomFragment extends BottomSheetDialogFragment {
                     Log.println(Log.DEBUG, "ROOM", "PUBLICCCC");
                     //start one room here
                     a_pub_room = new SpeakerPublicRoomActivity();
-                    a_pub_room.initRoomEtry(roomTitleInput.getText().toString(), roomDescriptionInput.getText().toString());
-
-                    callStartMeeting();
+                    RoomEntry pubRoomEntry=a_pub_room.initRoomEtry(roomTitleInput.getText().toString(), roomDescriptionInput.getText().toString());
+                    pubRoomEntry.setModelType(String.valueOf(model_spinner.getSelectedItemPosition()));
+                    callStartMeeting(a_pub_room);
 
                     //go to asr room
                     //Intent to_asr_public = new Intent(getActivity(), SpeakerPublicRoomActivity.class);
@@ -224,18 +234,16 @@ public class StartRoomFragment extends BottomSheetDialogFragment {
                     break;
 
                 case PRIVATE_ROOM:
-                    if (input_password.getText().toString().equals("")){
+                    if (a_private_room.getPassword().length()==0||a_private_room.getPassword().isEmpty()) {
                         promptPasswordSetting();
                         break;
                     }
-                    if (a_private_room.getRoomEtry().getPwd() != null) {
-                        callStartMeeting();
-                        //Intent to_asr_private = new Intent(getActivity(), SpeakerPrivateRoomActivity.class);
-                        //startActivity(to_asr_private);
+                   else{
+                        callStartMeeting(a_private_room);
+                        AAILogger.info(logger, "a_private_room started");
+                        break;
                     }
-                    Log.println(Log.DEBUG, "ROOM", "wooorks" + a_private_room.getRoomEtry().getPwd());
                     //   ((NavigationHost) getActivity()).navigateTo(a_private_room, true); // Navigate to the next Fragment
-                    break;
             }
             // click lets go button , also remove current fragment
             //getFragmentManager().beginTransaction().remove(StartRoomFragment.this).commit();
@@ -259,8 +267,8 @@ public class StartRoomFragment extends BottomSheetDialogFragment {
                 //输完密码后才能创建房间OBJEC。 新建的RoomEntry绑定在一个PrivateAcitivty上。
                 a_private_room = new SpeakerPrivateRoomActivity();
                 a_private_room.initRoomEtry(roomTitleInput.getText().toString(), roomDescriptionInput.getText().toString());
-                a_private_room.setPasswordPrivateRoom(input_password.getText().toString());
-                Log.println(Log.DEBUG, "ROOM", "wooorks" + a_private_room.getRoomEtry().getPwd());
+                a_private_room.setPassword(input_password.getText().toString());
+                AAILogger.debug(logger,"private room password set"+a_private_room.getPassword());
             }
         });
         dialog_builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -272,7 +280,7 @@ public class StartRoomFragment extends BottomSheetDialogFragment {
         dialog_builder.show();
     }
 
-    public void callStartMeeting() {
+    public void callStartMeeting(Object obj) {
         new Thread(() -> {
 
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -285,7 +293,7 @@ public class StartRoomFragment extends BottomSheetDialogFragment {
             String roomDescription = roomDescriptionInput.getText().toString();
             User user = userLocalStore.getLoggedInUser();
             String userName = user.getUserName();
-            String direct = spinner.getSelectedItem().toString();
+            String direct = lang_spinner.getSelectedItem().toString();
             int currentItem = carouselView.getCurrentItem();
             String url = imageUrls.get(currentItem);
 
@@ -295,15 +303,13 @@ public class StartRoomFragment extends BottomSheetDialogFragment {
                 jsonObject.put("roomDescription", roomDescription);
                 jsonObject.put("userName", userName);
                 jsonObject.put("imageUrl", url);
-                if (direct.equals("zh")){
-                    jsonObject.put("direct", 0);
-                } else {
-                    jsonObject.put("direct", 1);
+                jsonObject.put("direct",lang_spinner.getSelectedItemPosition());
+                jsonObject.put("modelType",model_spinner.getSelectedItemPosition());
+                if(a_private_room!=null){
+                    AAILogger.info(logger, "passsssssword works:  " + a_private_room.getPassword());
+                    jsonObject.put("pwd", a_private_room.getPassword());
                 }
-                if (selectedRoom == RoomType.PRIVATE_ROOM ) {
-                        String pwd = a_private_room.getRoomEtry().getPwd();
-                        jsonObject.put("pwd", pwd);
-                }
+                AAILogger.info(logger, "start room json to backend :" + jsonObject.toString());
             } catch (Exception e) {
                 System.out.println(e.toString());
             }
@@ -326,12 +332,11 @@ public class StartRoomFragment extends BottomSheetDialogFragment {
                     startMeetingProgressDialog.dismiss();
                     //handling json response, getting fields
                     final String myresponse_json = response.body().string();
-                    Log.println(Log.DEBUG, "OUT_JSON", myresponse_json);
+                    AAILogger.info(logger, "response" + myresponse_json);
                     Gson gson = new Gson();
                     Properties extractData = gson.fromJson(myresponse_json, Properties.class);
                     String state = extractData.getProperty("state");
-                    Log.println(Log.DEBUG, "LOG", state);
-
+                    AAILogger.info(logger, "state" + state);
                     // check response "state"
                     if (state.equals("1")) {
                         //need to update UI thread with a new thread,dont block UI thread

@@ -1,4 +1,4 @@
-package com.example.myapplication.asr.parentclass;
+package com.example.myapplication.views.parentclass;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -24,11 +24,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.myapplication.models.TranslationResponse;
+import com.example.myapplication.models.RoomEntry;
 import com.example.myapplication.models.User;
-import com.example.myapplication.util.UserLocalStore;
-import com.example.myapplication.util.network.ResponseHandler;
-import com.example.myapplication.util.network.WebSocket;
+import com.example.myapplication.control.LocalFIleUtil;
+import com.example.myapplication.control.UserLocalStore;
+import com.example.myapplication.control.network.WebSocket;
+import com.example.myapplication.utils.StringBuild;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
@@ -83,43 +84,34 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class SpeakerASRRoomActivity extends AppCompatActivity implements MessageListener {
-
+    protected RoomEntry room;
     protected WebSocket websocket;
-
     protected Toolbar toolBar;
     protected MaterialButton leaveRoom;
     protected Button start;
     protected Button stop;
     protected Button cancel;
-
     protected TextView recognizeState;
     protected TextView volume;
-
     protected EditText recognizeResult;
-
-
     protected int currentRequestId = 0;
-
     protected Handler handler;
-
     private static final Logger logger = LoggerFactory.getLogger(SpeakerASRRoomActivity.class);
-
     final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
-
     AAIClient aaiClient;
-
     AbsCredentialProvider credentialProvider;
-
     private final String PERFORMANCE_TAG = "PerformanceTag";
-
+    private final String TAG = "SpeakerASRRoomActivity";
     private boolean switchToDeviceAuth = false;
-
     UserLocalStore userLocalStore;
     private String engineModelType;
     private String meetingId;
     protected ProgressDialog progressDialog;
-
     public  static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+    public SpeakerASRRoomActivity() {
+        this.room = new RoomEntry.Builder().build();
+    }
 
     private void checkPermissions() {
 
@@ -144,18 +136,9 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
         }
     }
 
-    LinkedHashMap<String, String> resMap = new LinkedHashMap<>();
+    protected LinkedHashMap<String, String> resMap = new LinkedHashMap<>();
 
-    private String buildMessage(Map<String, String> msg) {
 
-        StringBuffer stringBuffer = new StringBuffer();
-        Iterator<Map.Entry<String, String>> iter = msg.entrySet().iterator();
-        while (iter.hasNext()) {
-            String value = iter.next().getValue();
-            stringBuffer.append(value + "\r\n");
-        }
-        return stringBuffer.toString();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,7 +149,6 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
         Intent intent = getIntent();
         meetingId = intent.getStringExtra("meetingId" );
         String direct = intent.getStringExtra("direct" );
-
         // get logged in userId
         userLocalStore = new UserLocalStore(this);
         User user = userLocalStore.getLoggedInUser();
@@ -178,10 +160,6 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
         } else if (direct.equals("en")){
             engineModelType = EngineModelType.EngineModelType16KEN.getType();
         }
-
-        // create ws connection
-        websocket = new WebSocket(new SocketListImpl());
-        websocket.createWebSocketClient(userId, meetingId);
 
         // progressDialog
         progressDialog = new ProgressDialog(this);
@@ -224,11 +202,20 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
         ClientConfiguration.setMaxAudioRecognizeConcurrentNumber(1); // 语音识别的请求的最大并发数
         ClientConfiguration.setMaxRecognizeSliceConcurrentNumber(1); // 单个请求的分片最大并发数
 
+        // create ws connection
+        websocket = new WebSocket(new WebSocket.SocketListener() {
+            @Override
+            public void onMessage(String response) {
+                Log.d(TAG,response);
+            }
+        });
+        Log.d(TAG,"createWebSocketClient()");
+        websocket.createWebSocketClient(userId, meetingId);
+
         // 识别结果回调监听器
         final AudioRecognizeResultListener audioRecognizeResultlistener = new AudioRecognizeResultListener() {
 
             boolean dontHaveResult = true;
-
             /**
              * 返回分片的识别结果
              * @param request 相应的请求
@@ -237,7 +224,6 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
              */
             @Override
             public void onSliceSuccess(AudioRecognizeRequest request, AudioRecognizeResult result, int seq) {
-
                 if (dontHaveResult && !TextUtils.isEmpty(result.getText())) {
                     dontHaveResult = false;
                     Date date = new Date();
@@ -250,21 +236,31 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
                 AAILogger.info(logger, "分片on slice success..");
                 AAILogger.info(logger, "分片slice seq = {}, voiceid = {}, result = {}", seq, result.getVoiceId(), result.getText());
 
-                // only logs or sends to ws if sliceType is 2 (end of a sentence) or (sliceType is 1 (middle of sentence) and the text is different (updated))
+                // only logs or sends to ws if sliceType is 2 (end of a sentence)
+                // or (sliceType is 1 (middle of sentence) and the text is different (updated))
                 if (result.getSliceType() == 2 || (result.getSliceType() == 1 && !result.getText().equals(resMap.get(String.valueOf(seq)))) ) {
                     //AAILogger.info(logger, "conditioned 分片slice text=" + result.getText() + " slice type:" + result.getSliceType());
                     Map<String, String> map = new HashMap<>();
-                    map.put("type", String.valueOf(result.getSliceType()));
-                    map.put("text", result.getText());
+                    String type=String.valueOf(result.getSliceType());
+                    String text= result.getText();
+                    map.put("type",type );
+                    map.put("text", text);
                     map.put("seq", String.valueOf(seq));
                     Gson gson = new Gson();
                     String json = gson.toJson(map);
+                    Log.d(TAG, "Socket sending json" + json);
+                    //write to local
+                    try {
+                        LocalFIleUtil.writeJsonParamsToFile("/data/data/com.example.myapplication/files/out.json",json);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     //websocket.webSocketClient.send(result.getText()); // send sliced text to ws
+                    AAILogger.info(logger, "Socket sending json" + json);
                     websocket.webSocketClient.send(json); // send sliced text to ws
                 }
-
                 resMap.put(String.valueOf(seq), result.getText());
-                final String msg = buildMessage(resMap);
+                final String msg = StringBuild.buildMessage(resMap);
                 AAILogger.info(logger, "分片slice msg=" + msg);
                 handler.post(new Runnable() {
                     @Override
@@ -287,9 +283,12 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
                 dontHaveResult = true;
                 AAILogger.info(logger, "语音流on segment success");
                 AAILogger.info(logger, "语音流segment seq = {}, voiceid = {}, result = {}", seq, result.getVoiceId(), result.getText());
+             /*   //每次新收到一个语音流，把pos设置为0；pos表示的是当前语句的词语的具体位子。
+                pos=0;*/
                 resMap.put(String.valueOf(seq), result.getText());
-                final String msg = buildMessage(resMap);
+                final String msg = StringBuild.buildMessage(resMap);
                 AAILogger.info(logger, "语音流segment msg=" + msg);
+                //speaker端 字幕更新
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -577,7 +576,7 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
                 final AudioRecognizeConfiguration audioRecognizeConfiguration = new AudioRecognizeConfiguration.Builder()
                         .setSilentDetectTimeOut(true)// 是否使能静音检测，true表示不检查静音部分
                         .audioFlowSilenceTimeOut(5000) // 静音检测超时停止录音
-                        .minAudioFlowSilenceTime(2000) // 语音流识别时的间隔时间
+                        .minAudioFlowSilenceTime(4000) // 语音流识别时的间隔时间
                         .minVolumeCallbackTime(80) // 音量回调时间
                         .sensitive(2.5f)
                         .build();
@@ -678,12 +677,15 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
 //        dialog.show();
     }
 
+    public RoomEntry initRoomEtry(String roomTitle,String roomDescription) {
+        this.room = new RoomEntry.Builder().roomTitle(roomTitle).roomDescription(roomDescription).build();
+        return this.room;
+    }
 
     public void initView(){
         setContentView(R.layout.mh_speaker_publicroom_activity);
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra(CommonConst.config);
-
         // 初始化相应的控件
         //set UI components view
         leaveRoom = findViewById(R.id.leaveroom_button);
@@ -709,15 +711,8 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
         recognizeResult.setScroller(new Scroller(getApplicationContext()));
         recognizeResult.setVerticalScrollBarEnabled(true);
         recognizeResult.setMovementMethod(new ScrollingMovementMethod());
-
-
         handler = new Handler(getMainLooper());
     }
-
-
-
-
-
 
     @Override
     protected void onDestroy() {
@@ -736,25 +731,9 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
             }
         });
     }
-
-    private void setUp_ReturnToolbar() {
-        toolBar = findViewById(R.id.return_bar);
-        AppCompatActivity activity = (AppCompatActivity) SpeakerASRRoomActivity.this;
-        if (activity != null) {
-            activity.setSupportActionBar(toolBar);
-        }
-        toolBar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-    }
-
-
-    // ws socketList implementation this is where we pass the callbacks to ws instance
+/*    // ws socketList implementation this is where we pass the callbacks to ws instance
     public class SocketListImpl implements WebSocket.SocketListener {
-
+        // 解析译文+原文回包
         public void  onMessage(String response){
             System.out.println("this is implemented in:"+this.toString()+":"+response);
             TranslationResponse resObj=ResponseHandler.decodeJsonResponse(response);
@@ -766,8 +745,7 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
                 }
             });
         }
-    }
-
+    }*/
     private void callEndMeeting(){
             new Thread(() -> {
                 OkHttpClient okHttpClient = new OkHttpClient.Builder()

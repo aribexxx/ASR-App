@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".asr.parentclass.SpeakerASRRoomActivity">
+        <activity android:name=".views.parentclass.SpeakerASRRoomActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>

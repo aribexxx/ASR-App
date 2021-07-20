@@ -1,4 +1,4 @@
-package com.example.myapplication.util;
+package com.example.myapplication.control;
 
 import android.content.Context;
 import android.content.SharedPreferences;

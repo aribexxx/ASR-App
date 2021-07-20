@@ -1,4 +1,4 @@
-package com.example.myapplication.util.network;
+package com.example.myapplication.control.network;
 
 import com.example.myapplication.models.TranslationResponse;
 import com.google.gson.Gson;

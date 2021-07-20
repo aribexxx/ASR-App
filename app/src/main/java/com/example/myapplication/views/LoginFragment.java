@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
 import com.example.myapplication.models.User;
-import com.example.myapplication.util.UserLocalStore;
+import com.example.myapplication.control.UserLocalStore;
 import com.example.myapplication.views.nav.NavigationHost;
 import com.example.myapplication.views.room_list.RoomGridFragment;
 import com.google.android.material.button.MaterialButton;
@@ -49,7 +49,6 @@ import okhttp3.Response;
 public class LoginFragment extends Fragment  {
     public  static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     UserLocalStore userLocalStore;
-
 
     @Override
     public View onCreateView(
@@ -219,6 +218,7 @@ public class LoginFragment extends Fragment  {
                                 final String myresponse_json = response.body().string();
                                 Log.println(Log.DEBUG,"OUT_JSON",myresponse_json);
                                 Gson gson = new Gson();
+                                Log.d("LOG",myresponse_json);
                                 Properties extractData = gson.fromJson(myresponse_json,Properties.class);
                                 String state = extractData.getProperty("state");
                                 Log.println(Log.DEBUG,"LOG",state);

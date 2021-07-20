@@ -1,4 +1,4 @@
-package com.example.myapplication.asr.parentclass;
+package com.example.myapplication.views.parentclass;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -6,32 +6,32 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.text.method.ScrollingMovementMethod;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import com.example.myapplication.R;
+
+import com.example.myapplication.control.network.ResponseHandler;
+import com.example.myapplication.models.RoomEntry;
+import com.example.myapplication.models.TranslationResponse;
 import com.example.myapplication.models.User;
-import com.example.myapplication.util.UserLocalStore;
-import com.example.myapplication.util.network.WebSocket;
-import com.example.myapplication.views.setuproom.SpeakerPrivateRoomActivity;
-import com.example.myapplication.views.setuproom.SpeakerPublicRoomActivity;
-import com.example.myapplication.views.setuproom.StartRoomFragment;
+import com.example.myapplication.control.UserLocalStore;
+import com.example.myapplication.control.network.WebSocket;
+import com.example.myapplication.utils.StringBuild;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 import com.tencent.iot.speech.app.DemoConfig;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Objects;
+import java.util.LinkedHashMap;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -40,7 +40,6 @@ import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 // parent class for public and private listener room
@@ -50,7 +49,8 @@ import okhttp3.Response;
 //  公共模块：socket获取字幕+ 双语字幕展示
 
 public class ListenerRoomActivity extends AppCompatActivity {
-
+    private static final Logger logger = LoggerFactory.getLogger(ListenerRoomActivity.class);
+    private static final String TAG = "ListenerRoomActivity";
     protected Toolbar toolBar;
     protected MaterialButton leaveRoom;
     protected Button start;
@@ -65,40 +65,35 @@ public class ListenerRoomActivity extends AppCompatActivity {
     protected WebSocket websocket;
     protected Handler handler;
     private ProgressDialog progressDialog;
-
+    RoomEntry room;
     private String meetingId;
     private String meetingStatus;
+    private String translationModelType;
     UserLocalStore userLocalStore;
-    Context c;
-
+    Context context;
+    WebSocket.SocketListener serverListner;
+    protected LinkedHashMap<String, String> resMap = new LinkedHashMap<>();
     public  static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
-    public class SocketListImpl implements WebSocket.SocketListener {
-
-        public void  onMessage(String s){
-
-            System.out.println("this is implemented listener: "+s);
-            if (s.equals("001SYSTEM MESSAGE: SPEAKER HAS LEFT")){
-                handler.post(() -> Toast.makeText(c, "speaker has left", Toast.LENGTH_SHORT).show());
-            } else {
-                handler.post(() -> recognizeResult.setText(s));
-                handler.post(() -> recognizeResult.setSelection(recognizeResult.getText().length(), recognizeResult.getText().length()));
-            }
-        }
+    public ListenerRoomActivity() {
+        this.room=new RoomEntry.Builder().build();
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //initView();
-
+        // get logged in userId
+        userLocalStore = new UserLocalStore(this);
+        User user = userLocalStore.getLoggedInUser();
+        String userId = user.getUserId();
+       // AAILogger.info(logger, "Current user Id is " + userId +"username "+user.getUserName());
+        Log.d(TAG,"Current user Id is " + userId +"username "+user.getUserName());
         // get meetingId from intent
         Intent intent = getIntent();
         meetingId = intent.getStringExtra("meetingId" );
         meetingStatus = intent.getStringExtra("meetingStatus" );
-        System.out.println("meetingStatus: "+meetingStatus);
-
+       // AAILogger.info(logger, "meetingStatus is " + meetingStatus);
+        Log.d(TAG,"meetingStatus is " + meetingStatus+"meetingID: "+meetingId);
         if (meetingStatus.equals("0")){ // meeting already ended call get meetingRecord instead of ws
             progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Processing...");
@@ -106,17 +101,46 @@ public class ListenerRoomActivity extends AppCompatActivity {
             progressDialog.setCancelable(false);
             progressDialog.setIndeterminate(true);
             progressDialog.show();
-            callMeetingRecord();
-        } else { // meeting still in progress, init ws
+            callHistoryMeetingRecord();
+        }
+        else { // meeting still in progress, init ws and create ws connection
 
-            c = this;
-            // get logged in userId
-            userLocalStore = new UserLocalStore(this);
-            User user = userLocalStore.getLoggedInUser();
-            String userId = user.getUserId();
-
-            // create ws connection
-            websocket = new WebSocket(new SocketListImpl());
+            websocket = new WebSocket(new WebSocket.SocketListener() {
+                @Override
+                public void onMessage(String response) {
+                    Log.d(TAG,response);
+                    TranslationResponse resObj= ResponseHandler.decodeJsonResponse(response);
+                    Log.d(TAG,"statues:"+resObj.getStatus());
+                     switch (resObj.getStatus()) {
+                         case "0":
+                             //Log.d(TAG,"success");
+                             //decoding response packets
+                             //Log.d(TAG,String.format("Response: seq = %s ,src = %s , transRes = %s ",resObj.getSeq(),resObj.getSrc(),resObj.getTranRes()));
+                             resMap.put(String.valueOf(resObj.getSeq()), resObj.getTranRes());
+                             final String totalMsg = StringBuild.buildMessage(resMap);
+                             handler.post(() -> recognizeResult.setText(totalMsg));
+                             handler.post(() -> recognizeResult.setSelection(recognizeResult.getText().length(), recognizeResult.getText().length()));
+                             break;
+                         case "1001":
+                             Log.d(TAG,"翻译模型不可用");
+                             break;
+                         case "1002":
+                             Log.d(TAG,"翻译失败");
+                             break;
+                         case "1000":
+                             Log.d(TAG,"翻译方向不可用");
+                             break;
+                         case "1":
+                             Log.d(TAG,"001SYSTEM MESSAGE: SPEAKER HAS LEFT");
+                             break;
+                         case "2":
+                             Log.d(TAG,"userId+\"加入会议\"+meetingId");
+                             break;
+                         default:
+                             break;
+                     }
+                    }
+                });
             websocket.createWebSocketClient(userId, meetingId); // enter the meeting room
         }
     }
@@ -132,11 +156,9 @@ public class ListenerRoomActivity extends AppCompatActivity {
         recognizeResult = passedRecognizeResult;
 
     }
-
-    public void initView(){
-    }
-
-    private void callMeetingRecord() {
+    public void initView(){}
+    private void callHistoryMeetingRecord() {
+        //History Record
             new Thread(() -> {
                 OkHttpClient okHttpClient = new OkHttpClient.Builder()
                         .connectTimeout(10, TimeUnit.SECONDS)
@@ -191,5 +213,6 @@ public class ListenerRoomActivity extends AppCompatActivity {
                 });
             }).start();
         }
+
 
 }
