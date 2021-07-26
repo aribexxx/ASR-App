@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MockHouse</string>
+    <string name="app_name">SimulRoom</string>
     <string name="appid">appid:</string>
     <string name="project_id">projectId:</string>
     <string name="secret_id">secretId:</string>
