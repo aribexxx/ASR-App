@@ -49,7 +49,7 @@ import okhttp3.Response;
 public class LoginFragment extends Fragment  {
     public  static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     UserLocalStore userLocalStore;
-
+    private static  final String PASSWORDMSG="Password is wrong,Try again Plz";
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,7 +77,6 @@ public class LoginFragment extends Fragment  {
         loginProgressDialog.setMessage("Please wait...");
         loginProgressDialog.setCancelable(false);
         loginProgressDialog.setIndeterminate(true);
-
         MaterialButton loginButton = view.findViewById(R.id.next_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,22 +133,8 @@ public class LoginFragment extends Fragment  {
                                  Gson gson = new Gson();
                                  Properties extractData = gson.fromJson(myresponse_json,Properties.class);
                                  String state = extractData.getProperty("state");
-                                 Log.println(Log.DEBUG,"LOG",state);
-
                                // check response "state"
-                                 if (state.equals("1")) {
-                                     //need to update UI thread with a new thread,dont block UI thread
-                                     String errorMessage = extractData.getProperty("errorMessage");
-                                     getActivity().runOnUiThread(new Runnable() {
-                                         @Override
-                                         public void run() {
-                                             passwordEditText.setText(myresponse_json);
-                                             MaterialAlertDialogBuilder dialogBuilder;
-                                             dialogBuilder = new MaterialAlertDialogBuilder(getActivity()).setTitle(errorMessage);
-                                             dialogBuilder.show();
-                                         }
-                                     });
-                                 } else if (state.equals("0")) { //get UID here
+                              if (state!=null&& state.equals("0")) { //get UID here
                                      //need to update UI thread with a new thread,dont block UI thread
                                         String userId = extractData.getProperty("userId");
                                         Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
@@ -165,6 +150,19 @@ public class LoginFragment extends Fragment  {
                                             }
                                      });
                                   }
+                                 else if (state==null||!state.equals("1")){
+                                     //need to update UI thread with a new thread,dont block UI thread
+                                     String errorMessage = extractData.getProperty("error");
+                                     getActivity().runOnUiThread(new Runnable() {
+                                         @Override
+                                         public void run() {
+                                             passwordEditText.setText("");
+                                             MaterialAlertDialogBuilder dialogBuilder;
+                                             dialogBuilder = new MaterialAlertDialogBuilder(getActivity()).setTitle(PASSWORDMSG);
+                                             dialogBuilder.show();
+                                         }
+                                     });
+                                 }
                              }
                         });
                     }).start();
@@ -226,13 +224,13 @@ public class LoginFragment extends Fragment  {
                                 // check response "state"
                                 if (state.equals("1")) {
                                     //need to update UI thread with a new thread,dont block UI thread
-                                    String errorMessage = extractData.getProperty("errorMessage");
+                                    String errorMessage = extractData.getProperty("error");
                                     getActivity().runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            passwordEditText.setText(myresponse_json);
+                                            passwordEditText.setText("");
                                             MaterialAlertDialogBuilder dialogBuilder;
-                                            dialogBuilder = new MaterialAlertDialogBuilder(getActivity()).setTitle(errorMessage);
+                                            dialogBuilder = new MaterialAlertDialogBuilder(getActivity()).setTitle(PASSWORDMSG);
                                             dialogBuilder.show();
                                         }
                                     });
@@ -278,6 +276,6 @@ public class LoginFragment extends Fragment  {
        authentication of the username and password.
     */
     private boolean isPasswordValid(@Nullable Editable text) {
-        return (text != null && !text.toString().equals(""));
+        return (text != null && !text.toString().equals("")&&text.length()>=3);
     }
 }
