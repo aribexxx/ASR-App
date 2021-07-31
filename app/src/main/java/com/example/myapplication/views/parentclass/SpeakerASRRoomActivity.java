@@ -238,7 +238,9 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
 
                 // only logs or sends to ws if sliceType is 2 (end of a sentence)
                 // or (sliceType is 1 (middle of sentence) and the text is different (updated))
-                if (result.getSliceType() == 2 || (result.getSliceType() == 1 && !result.getText().equals(resMap.get(String.valueOf(seq)))) ) {
+                if (result.getSliceType() == 2 ||
+                        (result.getSliceType() == 1 &&
+                                !result.getText().equals(resMap.get(String.valueOf(seq)))) ) {
                     //AAILogger.info(logger, "conditioned 分片slice text=" + result.getText() + " slice type:" + result.getSliceType());
                     Map<String, String> map = new HashMap<>();
                     String type=String.valueOf(result.getSliceType());
@@ -251,7 +253,7 @@ public class SpeakerASRRoomActivity extends AppCompatActivity implements Message
                     Log.d(TAG, "Socket sending json" + json);
                     //write to local
                     try {
-                        LocalFIleUtil.writeJsonParamsToFile("/data/data/com.example.myapplication/files/out.json",json);
+                        LocalFIleUtil.writeJsonParamsToFile("/data/data/com.example.myapplication/files/out_asr.json",json);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
