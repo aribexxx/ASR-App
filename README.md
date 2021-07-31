@@ -2,7 +2,7 @@
 
 Open app folder using Android Studio
 
-Inside `app/src/main/java/com/tencent/iot/speech/app/DemoConfig.java` (inside ASR-App-fork folder)
+Inside `app/src/main/java/com/example/myapplication/utils/DemoConfig.java`
 
 Change the following configurations
 
