@@ -1,4 +1,4 @@
-package com.tencent.iot.speech.app.consts;
+package com.example.myapplication.utils.consts;
 
 public class Const {
 

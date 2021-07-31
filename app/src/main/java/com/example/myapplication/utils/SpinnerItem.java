@@ -1,4 +1,4 @@
-package com.tencent.iot.speech.app.tts;
+package com.example.myapplication.utils;
 
 public class SpinnerItem {
     private int ID = 0;

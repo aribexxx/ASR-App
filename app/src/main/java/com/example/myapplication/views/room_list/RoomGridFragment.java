@@ -1,8 +1,6 @@
 package com.example.myapplication.views.room_list;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,14 +27,13 @@ import com.example.myapplication.views.setuproom.StartRoomFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.gson.Gson;
-import com.tencent.iot.speech.app.DemoConfig;
+import com.example.myapplication.utils.DemoConfig;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;

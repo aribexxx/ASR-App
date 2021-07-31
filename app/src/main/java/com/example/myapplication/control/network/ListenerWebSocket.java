@@ -1,6 +1,6 @@
 package com.example.myapplication.control.network;
 import android.util.Log;
-import com.tencent.iot.speech.app.DemoConfig;
+import com.example.myapplication.utils.DemoConfig;
 import java.net.URI;
 import java.net.URISyntaxException;
 import tech.gusavila92.websocketclient.WebSocketClient;

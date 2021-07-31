@@ -26,7 +26,6 @@ import com.example.myapplication.R;
 import com.example.myapplication.models.RoomEntry;
 import com.example.myapplication.models.User;
 import com.example.myapplication.control.UserLocalStore;
-import com.example.myapplication.views.parentclass.SpeakerASRRoomActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -35,7 +34,7 @@ import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
 import com.tencent.aai.log.AAILogger;
-import com.tencent.iot.speech.app.DemoConfig;
+import com.example.myapplication.utils.DemoConfig;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;

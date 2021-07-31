@@ -1,4 +1,4 @@
-package com.tencent.iot.speech.app;
+package com.example.myapplication.utils;
 
 
 import com.example.myapplication.BuildConfig;

@@ -1,4 +1,4 @@
-package com.tencent.iot.speech.app.utils;
+package com.example.myapplication.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

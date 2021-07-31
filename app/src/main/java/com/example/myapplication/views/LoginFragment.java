@@ -23,7 +23,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
-import com.tencent.iot.speech.app.DemoConfig;
+import com.example.myapplication.utils.DemoConfig;
 
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;

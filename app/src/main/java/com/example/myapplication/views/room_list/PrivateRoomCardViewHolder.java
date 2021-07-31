@@ -21,7 +21,7 @@ import com.example.myapplication.control.network.ImageRequester;
 import com.example.myapplication.views.setuproom.ListenerPrivateRoomActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
-import com.tencent.iot.speech.app.DemoConfig;
+import com.example.myapplication.utils.DemoConfig;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
