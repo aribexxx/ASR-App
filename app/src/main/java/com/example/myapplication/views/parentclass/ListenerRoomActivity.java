@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.myapplication.control.LocalFIleUtil;
 import com.example.myapplication.control.network.ResponseHandler;
 import com.example.myapplication.models.RoomEntry;
 import com.example.myapplication.models.TranslationResponse;
@@ -109,11 +110,17 @@ public class ListenerRoomActivity extends AppCompatActivity {
                 @Override
                 public void onMessage(String response) {
                     Log.d(TAG,response);
+                    //write to local
+                    try {
+                        LocalFIleUtil.writeJsonParamsToFile("/data/data/com.example.myapplication/files/out_translation.json",response);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     TranslationResponse resObj= ResponseHandler.decodeJsonResponse(response);
-                    Log.d(TAG,"statues:"+resObj.getStatus());
+                    Log.d(TAG,"status:"+resObj.getStatus());
                      switch (resObj.getStatus()) {
                          case "0":
-                             //Log.d(TAG,"success");
+                             Log.d(TAG,"success");
                              //decoding response packets
                              //Log.d(TAG,String.format("Response: seq = %s ,src = %s , transRes = %s ",resObj.getSeq(),resObj.getSrc(),resObj.getTranRes()));
                              resMap.put(String.valueOf(resObj.getSeq()), resObj.getTranRes());
@@ -122,19 +129,28 @@ public class ListenerRoomActivity extends AppCompatActivity {
                              handler.post(() -> recognizeResult.setSelection(recognizeResult.getText().length(), recognizeResult.getText().length()));
                              break;
                          case "1001":
+                             handler.post(() -> recognizeResult.setText("翻译模型不可用"));
                              Log.d(TAG,"翻译模型不可用");
                              break;
                          case "1002":
+                             handler.post(() -> recognizeResult.setText("翻译失败"));
                              Log.d(TAG,"翻译失败");
                              break;
                          case "1000":
+                             handler.post(() -> recognizeResult.setText("翻译方向不可用"));
                              Log.d(TAG,"翻译方向不可用");
                              break;
                          case "1":
+                             handler.post(() -> recognizeResult.setText("演讲者已经离开房间"));
                              Log.d(TAG,"001SYSTEM MESSAGE: SPEAKER HAS LEFT");
                              break;
                          case "2":
-                             Log.d(TAG,"userId+\"加入会议\"+meetingId");
+                             handler.post(() -> recognizeResult.setText(userLocalStore.getLoggedInUser().getUserName()+"成功加入会议"+meetingId));
+                             Log.d(TAG,"userId+\"成功加入会议\"+meetingId");
+                             break;
+                         case "500":
+                             handler.post(() -> recognizeResult.setText("\"翻译服务器现在关闭状态\""));
+                             Log.d(TAG,"翻译服务器现在关闭状态");
                              break;
                          default:
                              break;
@@ -205,6 +221,14 @@ public class ListenerRoomActivity extends AppCompatActivity {
                             runOnUiThread(
                                     () -> {
                                         handler.post(() -> recognizeResult.setText(meetingRecord));
+                                    }
+                            );
+                        }
+                        else if(!state.equals("0")||!state.equals("1")){
+                            String msg = extractData.getProperty("tranRes");
+                            runOnUiThread(
+                                    () -> {
+                                        handler.post(() -> recognizeResult.setText(msg));
                                     }
                             );
                         }
